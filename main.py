@@ -32,7 +32,7 @@ textures_coord_list = []
 
 # Vamos carregar cada modelo e definir funções para desenhá-los
 
-modelo = gh.load_model_from_file('caixa2.obj')
+modelo = gh.load_model_from_file('Car_1.obj')
 
 # inserindo vertices do modelo no vetor de vertices
 print('Processando modelo cube.obj. Vertice inicial:', len(vertices_list))
@@ -45,7 +45,7 @@ for face in modelo['faces']:
         normals_list.append(modelo['normals'][normal_id-1])
 print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
-gh.load_texture_from_file(0, 'caixa_madeira.jpg')
+gh.load_texture_from_file(0, 'Car_1.PNG')
 
 vertices = np.zeros(len(vertices_list), [("position", np.float32, 3)])
 vertices['position'] = vertices_list
@@ -141,8 +141,6 @@ glfw.set_key_callback(window, key_event)
 glfw.set_cursor_pos_callback(window, mouse_event)
 glfw.set_mouse_button_callback(window, mouse_button_callback)
 
-
-
 # Nesse momento, exibimos a janela.
 glfw.show_window(window)
 glfw.set_cursor_pos(window, lastX, lastY)
@@ -168,7 +166,7 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == False:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    gh.desenha_caixa(program)
+    gh.desenha_caixa(program, 0, len(vertices))
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")

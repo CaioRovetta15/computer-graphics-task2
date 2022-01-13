@@ -269,11 +269,11 @@ def projection():
 
     global altura, largura
     # perspective parameters: fovy, aspect, near, far
-    mat_projection = glm.perspective(glm.radians(90.0), largura/altura, 0.1, 1000.0)
+    mat_projection = glm.perspective(glm.radians(90.0), largura/altura, 0.01, 1000.0)
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
-def desenha_caixa(program):
+def desenha_caixa(program, begin, end):
     global ka_inc, kd_inc
     
     # aplica a matriz model
@@ -300,8 +300,7 @@ def desenha_caixa(program):
     glBindTexture(GL_TEXTURE_2D, 0)
 
     # desenha o modelo
-    glDrawArrays(GL_TRIANGLES, 0, 36)  # renderizando
-
+    glDrawArrays(GL_TRIANGLES  , begin, end)  # renderizando
 
 # dt_x, dt_y = 0, 0
 # dtheta = 0
