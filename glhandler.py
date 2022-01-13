@@ -12,8 +12,20 @@ import glm
 import math
 from PIL import Image
 
-def setWindow(width, height, name):
+cameraPos,cameraFront,cameraUp = glm.vec3(0,0,1),glm.vec3(0,0,-1),glm.vec3(0,1,0)
 
+polygonal_mode = False
+
+ka_inc, kd_inc = 0.3, 0.5
+
+altura = 0
+largura = 0
+
+def setWindow(height, width, name):
+
+    global altura, largura
+
+    altura, largura = height, width
     glfw.init()
     glfw.window_hint(glfw.VISIBLE, glfw.FALSE)
     window = glfw.create_window(width, height, name, None, None)
@@ -229,6 +241,67 @@ def setGPUBuffer(program, vertices, textures, normals):
     glUniform3f(loc_light_pos, -1.5, 1.7, 2.5)  # posicao da fonte de luz
 
     return loc_light_pos
+
+def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
+
+    angle = math.radians(angle)
+
+    matrix_transform = glm.mat4(1.0)  # instanciando uma matriz identidade
+
+    # rotacao
+    matrix_transform = glm.rotate(matrix_transform, angle, glm.vec3(r_x, r_y, r_z))
+    # translacao
+    matrix_transform = glm.translate(matrix_transform, glm.vec3(t_x, t_y, t_z))
+    # escala
+    matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z))
+
+    matrix_transform = np.array(matrix_transform).T  # pegando a transposta da matriz (glm trabalha com ela invertida)
+
+    return matrix_transform
+
+def view():
+    global cameraPos, cameraFront, cameraUp
+    mat_view = glm.lookAt(cameraPos, cameraPos + cameraFront, cameraUp)
+    mat_view = np.array(mat_view).T
+    return mat_view
+
+def projection():
+
+    global altura, largura
+    # perspective parameters: fovy, aspect, near, far
+    mat_projection = glm.perspective(glm.radians(90.0), largura/altura, 0.1, 1000.0)
+    mat_projection = np.array(mat_projection).T
+    return mat_projection
+
+def desenha_caixa(program):
+    global ka_inc, kd_inc
+    
+    # aplica a matriz model
+    angle = 45.0
+    r_x, r_y, r_z = 1.0, 1.0, 0.0
+    t_x, t_y, t_z = 0.0, 0.0, 0.0
+    s_x, s_y, s_z = 0.1, 0.1, 0.1
+
+    mat_model = model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    loc_model = glGetUniformLocation(program, "model")
+    glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
+
+    # define parametros de ilumincao do modelo
+    ka = ka_inc  # coeficiente de reflexao ambiente do modelo
+    kd = kd_inc  # coeficiente de reflexao difusa do modelo
+
+    loc_ka = glGetUniformLocation(program, "ka")  # recuperando localizacao da variavel ka na GPU
+    glUniform1f(loc_ka, ka)  # envia ka pra gpu
+
+    loc_kd = glGetUniformLocation(program, "kd")  # recuperando localizacao da variavel ka na GPU
+    glUniform1f(loc_kd, kd)  # envia kd pra gpu
+
+    # define id da textura do modelo
+    glBindTexture(GL_TEXTURE_2D, 0)
+
+    # desenha o modelo
+    glDrawArrays(GL_TRIANGLES, 0, 36)  # renderizando
+
 
 # dt_x, dt_y = 0, 0
 # dtheta = 0
