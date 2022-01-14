@@ -20,6 +20,8 @@ window = gh.setWindow(960, 1280, "Trabalho 2")
 
 program = gh.setGPU()
 
+loc_color = glGetUniformLocation(program, "color")
+
 glEnable(GL_TEXTURE_2D)
 qtd_texturas = 10
 textures = glGenTextures(qtd_texturas)
@@ -54,10 +56,10 @@ plane_vertices =  [
                             (-0.5, -2, -0.8),
                             (-0.5, -2, +0.8)
                         ]
-vertices_list.append( (+0.5, -2, -0.8) )
-vertices_list.append( (+0.5, -2, +0.8) )
-vertices_list.append( (-0.5, -2, -0.8) )
-vertices_list.append( (-0.5, -2, +0.8) )
+vertices_list.append( (+0.5, 0, -0.8) )
+vertices_list.append( (+0.5, 0, +0.8) )
+vertices_list.append( (-0.5, 0, -0.8) )
+vertices_list.append( (-0.5, 0, +0.8) )
 vertices['position'] = vertices_list
 
 
@@ -198,7 +200,13 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == False:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    gh.desenha_caixa(program, 0, len(vertices) - 5)
+    gh.draw_model(program, 0, len(vertices) - 5)
+
+    mat_model = gh.model(0, 1, 1, 0, 0, -.1, 0, 50, 50, 50)
+    loc_model = glGetUniformLocation(program, "model")
+    glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
+    R, G, B = 1, 0, 0
+    glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_TRIANGLE_STRIP, len(vertices) - 4, len(vertices))
 
     mat_view = gh.view()
