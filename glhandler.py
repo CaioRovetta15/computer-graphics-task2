@@ -288,16 +288,10 @@ def projection():
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
-def draw_model(program, begin, end, texture_id):
+def draw_model(program, mat_model, begin, end, texture_id):
     global ka_inc, kd_inc
 
-    # aplica a matriz model
-    angle = 0.0
-    r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 0.0, 0.01, 0.0
-    s_x, s_y, s_z = 0.15, 0.15, 0.15
-
-    mat_model = model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    
     loc_model = glGetUniformLocation(program, "model")
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
 
@@ -332,8 +326,8 @@ def key_event(window, key, scancode, action, mods):
             cameraPos += aux
         else:
             cameraPos += cameraSpeed * cameraFront
-            if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
-            if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
+            if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
+            if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
     if key == 83 and (action == 1 or action == 2):  # tecla S
         if not flyMode:
@@ -342,8 +336,8 @@ def key_event(window, key, scancode, action, mods):
             cameraPos -= aux
         else:
             cameraPos -= cameraSpeed * cameraFront
-            if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
-            if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
+            if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
+            if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
     if key == 65 and (action == 1 or action == 2):  # tecla A
         cameraPos -= glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
@@ -373,13 +367,13 @@ def key_event(window, key, scancode, action, mods):
 
     if key == 32 and (action == 1 or action == 2) and flyMode:  # tecla espaco
         cameraPos += cameraSpeed * cameraUp
-        if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
-        if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
+        if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
+        if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
     if key == 340 and (action == 1 or action == 2) and flyMode:  # tecla shift direito
         cameraPos -= cameraSpeed * cameraUp 
-        if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
-        if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
+        if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
+        if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
 
 def mouse_event(window, xpos, ypos):

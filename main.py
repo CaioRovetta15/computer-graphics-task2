@@ -34,6 +34,7 @@ textures_coord_list = []
 
 # Vamos carregar cada modelo e definir funções para desenhá-los
 
+## Inserindo o modelo CASA
 modelo = gh.load_model_from_file('3dFiles/house/house2.obj')
 
 # inserindo vertices do modelo no vetor de vertices
@@ -49,6 +50,7 @@ size_of_house = len(vertices_list)
 
 gh.load_texture_from_file(0, '3dFiles/house/wood.png')
 
+## Inserindo o modelo CARRO
 modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
 for face in modelo['faces']:
     for vertice_id in face[0]:
@@ -61,6 +63,20 @@ print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
 size_of_car = len(vertices_list)-size_of_house
+
+## Inserindo o modelo SKYBOX
+modelo = gh.load_model_from_file('3dFiles/sky/sky.obj')
+for face in modelo['faces']:
+    for vertice_id in face[0]:
+        vertices_list.append(modelo['vertices'][vertice_id-1])
+    for texture_id in face[1]:
+        textures_coord_list.append(modelo['texture'][texture_id-1])
+    for normal_id in face[2]:
+        normals_list.append(modelo['normals'][normal_id-1])
+print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
+
+gh.load_texture_from_file(2, '3dFiles/sky/sky.png')
+size_of_sky = len(vertices_list)-(size_of_car+size_of_house)
 
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
 vertices_list.append( (+0.5, 0, -0.8) )
@@ -103,16 +119,34 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == False:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    gh.draw_model(program, 0, size_of_house, 0)
+    # Exibe HOUSE
+    angle = 0.0
+    r_x, r_y, r_z = 1.0, 1.0, 0.0
+    t_x, t_y, t_z = 0.0, 0.01, 0.0
+    s_x, s_y, s_z = 0.15, 0.15, 0.15
+    mat_model = gh.model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    gh.draw_model(program, mat_model, 0, size_of_house-1, 0)
 
-    gh.draw_model(program, size_of_house, size_of_car, 1)
+    # Exige CARRO
+    angle = 0.0
+    r_x, r_y, r_z = 1.0, 1.0, 0.0
+    t_x, t_y, t_z = 0.0, 0.01, 2.0
+    s_x, s_y, s_z = 0.4, 0.4, 0.4
+    mat_model = gh.model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    gh.draw_model(program, mat_model, size_of_house, size_of_car+size_of_house-1, 1)
+
+    # Exibe SKYBOX
+    angle = 0.0
+    r_x, r_y, r_z = 1.0, 1.0, 0.0
+    t_x, t_y, t_z = 0.0, -.1, 0.0
+    s_x, s_y, s_z = 50, 50, 50
+    mat_model = gh.model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    gh.draw_model(program, mat_model, size_of_car+size_of_house, size_of_car+size_of_house+size_of_sky-1, 2)
 
     mat_model = gh.model(0, 1, 1, 0, 0, -.1, 0, 50, 50, 50)
     loc_model = glGetUniformLocation(program, "model")
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
-    R, G, B = 1, 0, 0
-    glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_TRIANGLE_STRIP, size_of_car+size_of_house, len(vertices))
+    glDrawArrays(GL_TRIANGLE_STRIP, size_of_car+size_of_house+size_of_sky, len(vertices))
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")
