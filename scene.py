@@ -152,10 +152,14 @@ class Scene:
 
         return vertices, textures, normals
     
-    def drawModelbyName(self, program, name, model_mat):
+    def drawModelbyName(self, program, name, model_mat = glm.mat4(1.0), ka = 0.7, kd = 0.7):
         
+        model_mat = np.array(model_mat)
         for obj in self.objects:
             if obj.name == name:
+                obj.ka = ka
+                obj.kd = kd
                 obj.model_mat = model_mat
                 obj.drawModel(program)
+    
 
