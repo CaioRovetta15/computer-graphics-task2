@@ -12,7 +12,7 @@ import glm
 import math
 from PIL import Image
 
-cameraPos,cameraFront,cameraUp = glm.vec3(0,.43,1),glm.vec3(0,0,-1),glm.vec3(0,1,0)
+cameraPos,cameraFront,cameraUp = glm.vec3(-1.15,.43,.15),glm.vec3(0,0,-1),glm.vec3(0,1,0)
 
 polygonal_mode = False
 
