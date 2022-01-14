@@ -52,6 +52,8 @@ while not glfw.window_should_close(window):
 
     glfw.poll_events()
 
+    print( gh.cameraPos )
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glClearColor(0.2, 0.2, 0.2, 1.0)
@@ -69,8 +71,8 @@ while not glfw.window_should_close(window):
     scene.drawModelbyName(program, "House", model_mat=model_mat, ka = 0.5, kd = 1.0)
 
     # Exige CARRO
-    r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 1.0, .01, 2.0 )
+    r = glm.vec3( 0.0, 1.0, 0.0 )
+    t = glm.vec3( -1.2, .01, -2.5 )
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.5, kd = 1.0)
@@ -84,7 +86,7 @@ while not glfw.window_should_close(window):
 
     # Exibe GRASS
     r = glm.vec3( 1.0, 0.0, 0.0 )
-    t = glm.vec3( 0.0, -.1, 0.0 )
+    t = glm.vec3( 0.0, 0.0, -2.0 )
     s = glm.vec3( 0.1, 0.1, 0.1)
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Grass", model_mat=model_mat, ka = 0.5, kd = 0.7)
