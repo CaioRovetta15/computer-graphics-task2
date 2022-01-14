@@ -177,7 +177,7 @@ def setGPUBuffer(program, vertices, textures, normals):
     #  Dados de iluminação: posição da fonte de luz
 
     loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
-    glUniform3f(loc_light_pos, 0.0, 10.0, 0.0)  # posicao da fonte de luz
+    glUniform3f(loc_light_pos, 10.0, 30.0, -10.0)  # posicao da fonte de luz
 
 def model( r, t, s, angle = 0):
 
@@ -190,7 +190,7 @@ def model( r, t, s, angle = 0):
 
     # eixo de rotacao + angulo
     matrix_transform = glm.rotate(matrix_transform, angle, r )
-    
+
     # escala
     matrix_transform = glm.scale(matrix_transform, s )
 
