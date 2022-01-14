@@ -48,7 +48,6 @@ print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(0, '3dFiles/house/wood.png')
 
-
 modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
 for face in modelo['faces']:
     for vertice_id in face[0]:
@@ -61,20 +60,12 @@ print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
 
-
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
-plane_vertices =  [
-                            (+0.5, -2, -0.8),
-                            (+0.5, -2, +0.8),
-                            (-0.5, -2, -0.8),
-                            (-0.5, -2, +0.8)
-                        ]
 vertices_list.append( (+0.5, 0, -0.8) )
 vertices_list.append( (+0.5, 0, +0.8) )
 vertices_list.append( (-0.5, 0, -0.8) )
 vertices_list.append( (-0.5, 0, +0.8) )
 vertices['position'] = vertices_list
-
 
 textures = np.zeros(len(textures_coord_list), [("position", np.float32, 2)])  # duas coordenadas
 textures['position'] = textures_coord_list
