@@ -41,8 +41,9 @@ def setWindow(height, width, name):
 
     return window
 
+
 def setGPU():
-    
+
     vertex_code = """
             attribute vec3 position;
             attribute vec2 texture_coord;
@@ -142,6 +143,7 @@ def setGPU():
 
     return program
 
+
 def load_model_from_file(filename):
     """Loads a Wavefront OBJ file. """
     objects = {}
@@ -198,6 +200,7 @@ def load_model_from_file(filename):
 
     return model
 
+
 def load_texture_from_file(texture_id, img_textura):
     glBindTexture(GL_TEXTURE_2D, texture_id)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
@@ -210,6 +213,7 @@ def load_texture_from_file(texture_id, img_textura):
     image_data = img.tobytes("raw", "RGB", 0, -1)
     #image_data = np.array(list(img.getdata()), np.uint8)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
+
 
 def setGPUBuffer(program, vertices, textures, normals):
 
@@ -248,6 +252,7 @@ def setGPUBuffer(program, vertices, textures, normals):
     loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
     glUniform3f(loc_light_pos, 0.0, 10.0, 0.0)  # posicao da fonte de luz
 
+
 def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
 
     angle = math.radians(angle)
@@ -261,17 +266,19 @@ def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
     matrix_transform = glm.translate(matrix_transform, glm.vec3(t_x, t_y, t_z))
 
     # escala
-    matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z)) 
+    matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z))
 
     matrix_transform = np.array(matrix_transform)  # pegando a transposta da matriz (glm trabalha com ela invertida)
 
     return matrix_transform
+
 
 def view():
     global cameraPos, cameraFront, cameraUp
     mat_view = glm.lookAt(cameraPos, cameraPos + cameraFront, cameraUp)
     mat_view = np.array(mat_view).T
     return mat_view
+
 
 def projection():
     global altura, largura
@@ -308,7 +315,8 @@ def draw_model(program, begin, end, texture_id):
     glBindTexture(GL_TEXTURE_2D, texture_id)
 
     # desenha o modelo
-    glDrawArrays(GL_TRIANGLES  , begin, end)  # renderizando
+    glDrawArrays(GL_TRIANGLES, begin, end)  # renderizando
+
 
 def key_event(window, key, scancode, action, mods):
     global flyMode
@@ -318,21 +326,21 @@ def key_event(window, key, scancode, action, mods):
 
     cameraSpeed = 0.05
     if key == 87 and (action == 1 or action == 2):  # tecla W
-        if not flyMode :
+        if not flyMode:
             aux = cameraSpeed * cameraFront
             aux = glm.vec3(aux.x, 0, aux.z)
             cameraPos += aux
-        else :
+        else:
             cameraPos += cameraSpeed * cameraFront
             if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
             if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
 
     if key == 83 and (action == 1 or action == 2):  # tecla S
-        if not flyMode :
+        if not flyMode:
             aux = cameraSpeed * cameraFront
             aux = glm.vec3(aux.x, 0, aux.z)
             cameraPos -= aux
-        else :
+        else:
             cameraPos -= cameraSpeed * cameraFront
             if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
             if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
@@ -373,16 +381,15 @@ def key_event(window, key, scancode, action, mods):
         if gh.cameraPos.y < heightMinLimit : gh.cameraPos.y = heightMinLimit
         if gh.cameraPos.y > heightMaxLimit : gh.cameraPos.y = heightMaxLimit
 
-    print(key)        
 
 def mouse_event(window, xpos, ypos):
     global firstMouse, yaw, pitch, lastX, lastY, isRightButtonPressed, cameraFront
-    if firstMouse :
+    if firstMouse:
         lastX = xpos
         lastY = ypos
         firstMouse = False
 
-    if not isRightButtonPressed : 
+    if not isRightButtonPressed:
         lastX = xpos
         lastY = ypos
         return
@@ -410,6 +417,7 @@ def mouse_event(window, xpos, ypos):
     front.z = math.sin(glm.radians(yaw)) * math.cos(glm.radians(pitch))
     cameraFront = glm.normalize(front)
 
+
 def mouse_button_callback(window, button, action, mods):
 
     global isRightButtonPressed
@@ -420,5 +428,3 @@ def mouse_button_callback(window, button, action, mods):
     if button == 0 and action == 0:
         isRightButtonPressed = False
         print("Right button released")
-
-
