@@ -275,7 +275,7 @@ def projection():
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
-def draw_model(program, begin, end):
+def draw_model(program, begin, end,texture_id):
     global ka_inc, kd_inc
     
     # aplica a matriz model
