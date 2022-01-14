@@ -279,7 +279,8 @@ def projection():
     return mat_projection
 
 def draw_model(program, begin, end):
-    
+    global ka_inc, kd_inc
+
     # aplica a matriz model
     angle = 0.0
     r_x, r_y, r_z = 1.0, 1.0, 0.0
