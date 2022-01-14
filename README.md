@@ -1,5 +1,4 @@
 # computer-graphics-task2
-# computer-graphics-task1
 Second group task for Computer Graphics subject using OpenGL tools.
 
 ## Install
@@ -20,29 +19,26 @@ The program was a very interesting way to exercise OpenGL programming and to und
 
 First of all, when you start the program you will be inside the house, where you can see some forniture, like some chairs, a sofa, a table and a man:
 
-![alt text](https://i.imgur.com/kxQCtyW.png)
+![alt text](https://i.imgur.com/wRrG2nu.png)
 
-This is a "game" that you can control a red spaceship and fly away of the Earth. 
-To control it you can use **WASD** or the **ArrowKeys** and to rotate it, use **Q** to rotate to the left and **E** to the right.
+In the scene you can control the camera with the **WASD** keys and the mouse.
+You can anter the "fligth mode" by pressing the **F** key, witch enable you to leave the ground. While in the flight mode you can go up by pressing the **SPACE BAR** and go down pressing the **shift** key.
+Besides that pressing the **P** key you enter the mesh view mode in witch you can see all the meshes without the textures.
 
 ![alt text](https://i.imgur.com/8PdQ7vL.gif)
 
 ## How it works?
 
-This project were divided in four files:
+This project were divided in two files:
 
-### ``transform.py``
 
-Responsible to manage the transformation matrices, i.e, it generates the right matrices to do the fundamental transformations such as translation, scale and rotation.
 
 ### ``glhandler.py``
 
-Holds all the specific OpenGL settings with the GPU buffer and the window. It also sets the key bindings to the game controls.
+Holds all the specific OpenGL settings with the GPU buffer and the window. It also sets the key bindings to the game controls. And it reads all the Wavefront files and bind all textures.
 
-### ``objects.py``
 
-It is made to return the arrays that contain the figure points to the drawn.
 
 ### ``main.py``
 
-Finally, this is the main file to use all those functions to set up the game. The processes can be simplified to: Set the window; Load figures; Set the GPU; Transform and draw all the figures.
+Finally, this is the main file to use all those functions to set up the scene. The processes can be simplified to: Set the window; Load files and textures; Set the GPU; Transform and draw all the meshes.
