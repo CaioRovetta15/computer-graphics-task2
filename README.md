@@ -21,6 +21,9 @@ First of all, when you start the program you will be inside the house, where you
 
 ![alt text](https://i.imgur.com/wRrG2nu.png)
 
+On the outside you can see a police car chasing two outlaw cars while all of them dift near a group of people.
+
+
 In the scene you can control the camera with the **WASD** keys and the mouse.
 You can anter the "flight mode" by pressing the **F** key, witch enable you to leave the ground. While in the flight mode you can go up by pressing the **SPACE BAR** and go down pressing the **L SHIFT** key.
 Besides that pressing the **P** key you enter the mesh view mode in witch you can see all the meshes without the textures.
