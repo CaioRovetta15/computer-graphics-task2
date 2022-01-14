@@ -215,7 +215,6 @@ def projection():
 def draw_model(program, mat_model, ka, kd, begin, end, texture_id):
     global ka_inc, kd_inc
 
-    
     loc_model = glGetUniformLocation(program, "model")
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
 

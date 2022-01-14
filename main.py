@@ -67,7 +67,7 @@ while not glfw.window_should_close(window):
 
     # Exige CARRO
     r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 1.0, .01, 2.0 )
+    t = glm.vec3( 1.0, .01, 5.0 )
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Outlaw", model_mat)
@@ -98,7 +98,6 @@ while not glfw.window_should_close(window):
     # t = glm.vec3( 1.0, -.01, 0.0 )
     # s = glm.vec3( 50, 50, 50 )
     # model_mat = gh.model( r, t, s, angle = 0)
-
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")
