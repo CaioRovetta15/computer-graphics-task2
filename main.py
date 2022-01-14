@@ -29,8 +29,12 @@ scene.appendModel("House", "3dFiles/house/house2.obj", "3dFiles/house/wood.png")
 scene.appendModel("Outlaw", "3dFiles/exterior/outlaw car/outlaw.obj", "3dFiles/exterior/outlaw car/outlaw.png")
 scene.appendModel("Police", "3dFiles/exterior/police car/police.obj", "3dFiles/exterior/police car/police.png")
 scene.appendModel("Sky", "3dFiles/sky/sky.obj", "3dFiles/sky/sky2.png")
+<<<<<<< HEAD
 scene.appendModel("Grass", "3dFiles/ground/grass/grass.obj", "3dFiles/ground/grass/grass.jpeg")
 scene.appendModel("Sofa", "3dFiles/interior/sofa/Triple_Sofa.obj", "3dFiles/interior/sofa/triple_sofa_fabric_bump.png")
+=======
+scene.appendModel("Grass", "3dFiles/ground/grass/grass.obj", "3dFiles/ground/grass/grass2.jpg")
+>>>>>>> f330bd7ebb1e02626de35302d0b9fc4c97946e36
 
 vertices, textures, normals = scene.getVTN()
 
@@ -61,24 +65,28 @@ while not glfw.window_should_close(window):
 
     # Exibe HOUSE
     r = glm.vec3( 1.0, 1.0, 0.0 )
+<<<<<<< HEAD
     t = glm.vec3( 0.0, 0.0, 0.0 )
+=======
+    t = glm.vec3( 1.0, 0.01, 0.0 )
+>>>>>>> f330bd7ebb1e02626de35302d0b9fc4c97946e36
     s = glm.vec3( .15, .15, .15 )
     model_mat = gh.model(r, t, s, angle = 0)
     scene.drawModelbyName(program, "House", model_mat=model_mat, ka = 0.5, kd = 1.0)
 
     # Exige CARRO
     r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 1.0, .01, 5.0 )
+    t = glm.vec3( 1.0, .01, 2.0 )
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.5, kd = 1.0)
-
 
     # Exibe SKYBOX
     r = glm.vec3( 1.0, 1.0, 0.0 )
     t = glm.vec3( 0.0, -.5, 0.0 )
     s = glm.vec3( 500, 500, 500 )
     model_mat = gh.model( r, t, s, angle = 0)
+<<<<<<< HEAD
     scene.drawModelbyName(program, "Sky", model_mat=model_mat, ka = 1, kd = 0)
 
     # Exibe GRASS
@@ -94,6 +102,16 @@ while not glfw.window_should_close(window):
     s = glm.vec3( 0.3, 0.3, 0.3)
     model_mat = gh.model( r, t, s, angle = -90)
     scene.drawModelbyName(program, "Sofa", model_mat=model_mat, ka = 0.5, kd = 1.0)
+=======
+    scene.drawModelbyName(program, "Sky", model_mat)
+
+    # Exibe GROUND-GRASS
+    r = glm.vec3( 1.0, 0.0, 0.0 )
+    t = glm.vec3( 0.0, 0.0, 0.0 )
+    s = glm.vec3( 0.1, 0.1, 0.1)
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Grass", model_mat)
+>>>>>>> f330bd7ebb1e02626de35302d0b9fc4c97946e36
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")
