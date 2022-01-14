@@ -34,10 +34,9 @@ textures_coord_list = []
 
 # Vamos carregar cada modelo e definir funções para desenhá-los
 
-modelo = gh.load_model_from_file('Car_1.obj')
+modelo = gh.load_model_from_file('3dFiles/house/House.obj')
 
 # inserindo vertices do modelo no vetor de vertices
-print('Processando modelo cube.obj. Vertice inicial:', len(vertices_list))
 for face in modelo['faces']:
     for vertice_id in face[0]:
         vertices_list.append(modelo['vertices'][vertice_id-1])
@@ -47,7 +46,7 @@ for face in modelo['faces']:
         normals_list.append(modelo['normals'][normal_id-1])
 print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
-gh.load_texture_from_file(0, 'Car_1.PNG')
+gh.load_texture_from_file(0, '3dFiles/house/bricks.jpeg')
 
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
 plane_vertices =  [
@@ -187,9 +186,18 @@ glfw.set_cursor_pos(window, lastX, lastY)
 
 glEnable(GL_DEPTH_TEST)  # importante para 3D
 
+ang = 0.0
+
+loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
+glUniform3f(loc_light_pos, -1.5, 1.7, 2.5)  # posicao da fonte de luz
+
 while not glfw.window_should_close(window):
 
     glfw.poll_events()
+
+    ang += 0.005
+
+    glUniform3f(loc_light_pos, 4, 0.0, 4)  # posicao da fonte de luz
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
