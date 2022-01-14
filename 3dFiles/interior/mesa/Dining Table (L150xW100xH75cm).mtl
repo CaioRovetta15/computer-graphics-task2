@@ -1,0 +1,26 @@
+# Blender MTL File: 'Dining Table (L150xW100xH75cm).blend'
+# Material Count: 2
+
+newmtl Dining_Table_(L150xW100xH75cm)_-_Legs_-_Wood
+Ns 169.000003
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd -s 0.500000 0.500000 0.500000 /home/caiorovetta/Downloads/Library/Textures/Wood/Wood - Walnut 03 - Diffuse.png
+map_Ns -s 0.500000 0.500000 0.500000 /home/caiorovetta/Downloads/Library/Textures/Wood/Wood - Walnut 03 - Roughness.png
+
+newmtl Dining_Table_(L150xW100xH75cm)_-_Tabletop_-_Marble
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd -s 0.500000 0.500000 0.500000 /home/caiorovetta/Downloads/Library/Textures/Stone/Stone - Marble 04 - Diffuse.png
+map_Ns -s 0.500000 0.500000 0.500000 /home/caiorovetta/Downloads/Library/Textures/Stone/Stone - Marble 04 - Roughness.png
