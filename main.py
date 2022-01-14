@@ -65,14 +65,14 @@ while not glfw.window_should_close(window):
 
     # Exibe HOUSE
     r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 0.0, 0.0, 0.0 )
+    t = glm.vec3( 0.0, 0.01, 0.0 )
     s = glm.vec3( .15, .15, .15 )
     model_mat = gh.model(r, t, s, angle = 0)
     scene.drawModelbyName(program, "House", model_mat=model_mat, ka = 0.5, kd = 1.0)
 
     # Exige CARRO
     r = glm.vec3( 0.0, 1.0, 0.0 )
-    t = glm.vec3( -1.2, .01, -2.5 )
+    t = glm.vec3( -1.2, 0.0, 4)
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.5, kd = 1.0)
