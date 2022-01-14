@@ -186,18 +186,9 @@ glfw.set_cursor_pos(window, lastX, lastY)
 
 glEnable(GL_DEPTH_TEST)  # importante para 3D
 
-ang = 0.0
-
-loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
-glUniform3f(loc_light_pos, -1.5, 1.7, 2.5)  # posicao da fonte de luz
-
 while not glfw.window_should_close(window):
 
     glfw.poll_events()
-
-    ang += 0.005
-
-    glUniform3f(loc_light_pos, 4, 0.0, 4)  # posicao da fonte de luz
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
