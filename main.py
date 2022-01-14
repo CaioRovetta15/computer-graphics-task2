@@ -21,7 +21,6 @@ window = gh.setWindow(960, 1280, "Trabalho 2")
 program = gh.setGPU()
 
 loc_color = glGetUniformLocation(program, "color")
-
 glEnable(GL_TEXTURE_2D)
 qtd_texturas = 10
 textures = glGenTextures(qtd_texturas)
@@ -39,7 +38,7 @@ modelo = gh.load_model_from_file('3dFiles/house/house2.obj')
 houseNumOfVert = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
 print('Processando modelo house2.obj. Vertice final:', len(vertices_list) )
 
-gh.load_texture_from_file(0, '3dFiles/house/wood.png')
+gh.load_texture_from_file(0, "3dFiles/house/wood.png")
 
 ## Inserindo o modelo CARRO
 modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
