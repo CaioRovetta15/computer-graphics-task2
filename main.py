@@ -48,6 +48,20 @@ print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(0, '3dFiles/interior/chair/wood.jpg')
 
+
+modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
+for face in modelo['faces']:
+    for vertice_id in face[0]:
+        vertices_list.append(modelo['vertices'][vertice_id-1])
+    for texture_id in face[1]:
+        textures_coord_list.append(modelo['texture'][texture_id-1])
+    for normal_id in face[2]:
+        normals_list.append(modelo['normals'][normal_id-1])
+print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
+
+gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
+
+
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
 plane_vertices =  [
                             (+0.5, -2, -0.8),
@@ -199,7 +213,9 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == False:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    gh.draw_model(program, 0, len(vertices) - 5)
+    gh.draw_model(program, 0, len(vertices),0)
+
+    gh.draw_model(program, 0, len(vertices),1)
 
     mat_model = gh.model(0, 1, 1, 0, 0, -.1, 0, 50, 50, 50)
     loc_model = glGetUniformLocation(program, "model")

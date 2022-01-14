@@ -299,7 +299,7 @@ def draw_model(program, begin, end,texture_id):
     glUniform1f(loc_kd, kd)  # envia kd pra gpu
 
     # define id da textura do modelo
-    glBindTexture(GL_TEXTURE_2D, 0)
+    glBindTexture(GL_TEXTURE_2D, texture_id)
 
     # desenha o modelo
     glDrawArrays(GL_TRIANGLES  , begin, end)  # renderizando
