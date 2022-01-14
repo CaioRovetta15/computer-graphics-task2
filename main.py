@@ -31,6 +31,8 @@ scene.appendModel("Police", "3dFiles/exterior/police car/police.obj", "3dFiles/e
 scene.appendModel("Sky", "3dFiles/sky/sky.obj", "3dFiles/sky/sky2.png")
 scene.appendModel("Grass", "3dFiles/ground/grass/grass.obj", "3dFiles/ground/grass/grass.jpeg")
 scene.appendModel("Sofa", "3dFiles/interior/sofa/Triple_Sofa.obj", "3dFiles/interior/sofa/triple_sofa_fabric_bump.png")
+scene.appendModel("Chair", "3dFiles/interior/chair/chair.obj", "3dFiles/interior/chair/wood.jpg")
+scene.appendModel("Table","3dFiles/interior/mesa/mesa.obj","3dFiles/interior/mesa/Wood - Walnut 03 - Diffuse.png")
 
 vertices, textures, normals = scene.getVTN()
 
@@ -85,14 +87,51 @@ while not glfw.window_should_close(window):
     t = glm.vec3( 0.0, -.1, 0.0 )
     s = glm.vec3( 0.1, 0.1, 0.1)
     model_mat = gh.model( r, t, s, angle = 0)
-    scene.drawModelbyName(program, "Grass", model_mat=model_mat, ka = 0.5, kd = 1.0)
+    scene.drawModelbyName(program, "Grass", model_mat=model_mat, ka = 0.5, kd = 0.7)
 
     # Exibe Sofa
     r = glm.vec3( 0.0, 1.0, 0.0 )
-    t = glm.vec3( 0.0, 0.0, -1.0 )
+    t = glm.vec3( 1.0, 0.0, 0.0 )
     s = glm.vec3( 0.3, 0.3, 0.3)
     model_mat = gh.model( r, t, s, angle = -90)
-    scene.drawModelbyName(program, "Sofa", model_mat=model_mat, ka = 0.5, kd = 1.0)
+    scene.drawModelbyName(program, "Sofa", model_mat=model_mat, ka = 0.7, kd = 0.7)
+
+    # Exibe Chair
+    r = glm.vec3( 0.0, 1.0, 0.0 )
+    t = glm.vec3( 0.0, 0.0, -0.25 )
+    s = glm.vec3( 0.07, 0.07, 0.07)
+    model_mat = gh.model( r, t, s, angle = -90)
+    scene.drawModelbyName(program, "Chair", model_mat=model_mat, ka = 0.7, kd = 0.7)
+    
+    # Exibe Chair
+    r = glm.vec3( 0.0, 1.0, 0.0 )
+    t = glm.vec3( 0.1, 0.0, 0.1 )
+    s = glm.vec3( 0.07, 0.07, 0.07)
+    model_mat = gh.model( r, t, s, angle = 210)
+    scene.drawModelbyName(program, "Chair", model_mat=model_mat, ka = 0.7, kd = 0.7)
+
+    # Exibe Chair
+    r = glm.vec3( 0.0, 1.0, 0.0 )
+    t = glm.vec3( -0.2, 0.0, 0.25 )
+    s = glm.vec3( 0.07, 0.07, 0.07)
+    model_mat = gh.model( r, t, s, angle = 90)
+    scene.drawModelbyName(program, "Chair", model_mat=model_mat, ka = 0.7, kd = 0.7)
+
+    # Exibe Mesa
+    r = glm.vec3( 0.0, 1.0, 0.0 )
+    t = glm.vec3( -0.1, 0.0, 0.0 )
+    s = glm.vec3( 0.003, 0.003, 0.003)
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Table", model_mat=model_mat, ka = 0.7, kd = 0.7)
+
+    # Exige CARRO
+    r = glm.vec3( 1.0, 1.0, 0.0 )
+    t = glm.vec3( 1.0, .01, 4.0 )
+    s = glm.vec3( 0.4, 0.4, 0.4 )
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.5, kd = 1.0)
+
+
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")

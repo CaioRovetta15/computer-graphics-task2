@@ -185,12 +185,12 @@ def model( r, t, s, angle = 0):
 
     matrix_transform = glm.mat4(1.0)  # instanciando uma matriz identidade
 
-    # eixo de rotacao + angulo
-    matrix_transform = glm.rotate(matrix_transform, angle, r )
-
     # translacao
     matrix_transform = glm.translate(matrix_transform, t )
 
+    # eixo de rotacao + angulo
+    matrix_transform = glm.rotate(matrix_transform, angle, r )
+    
     # escala
     matrix_transform = glm.scale(matrix_transform, s )
 
