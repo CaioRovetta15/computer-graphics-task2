@@ -36,49 +36,28 @@ textures_coord_list = []
 
 ## Inserindo o modelo CASA
 modelo = gh.load_model_from_file('3dFiles/house/house2.obj')
-
-# inserindo vertices do modelo no vetor de vertices
-for face in modelo['faces']:
-    for vertice_id in face[0]:
-        vertices_list.append(modelo['vertices'][vertice_id-1])
-    for texture_id in face[1]:
-        textures_coord_list.append(modelo['texture'][texture_id-1])
-    for normal_id in face[2]:
-        normals_list.append(modelo['normals'][normal_id-1])
-print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
-size_of_house = len(vertices_list)
+houseNumOfVert = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
+print('Processando modelo house2.obj. Vertice final:', len(vertices_list) )
 
 gh.load_texture_from_file(0, '3dFiles/house/wood.png')
 
 ## Inserindo o modelo CARRO
 modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
-for face in modelo['faces']:
-    for vertice_id in face[0]:
-        vertices_list.append(modelo['vertices'][vertice_id-1])
-    for texture_id in face[1]:
-        textures_coord_list.append(modelo['texture'][texture_id-1])
-    for normal_id in face[2]:
-        normals_list.append(modelo['normals'][normal_id-1])
-print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
+carNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
+print('Processando modelo outlaw.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
-size_of_car = len(vertices_list)-size_of_house
 
 ## Inserindo o modelo SKYBOX
 modelo = gh.load_model_from_file('3dFiles/sky/sky.obj')
-for face in modelo['faces']:
-    for vertice_id in face[0]:
-        vertices_list.append(modelo['vertices'][vertice_id-1])
-    for texture_id in face[1]:
-        textures_coord_list.append(modelo['texture'][texture_id-1])
-    for normal_id in face[2]:
-        normals_list.append(modelo['normals'][normal_id-1])
-print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
+skyNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
+print('Processando modelo sky.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(2, '3dFiles/sky/sky2.png')
-size_of_sky = len(vertices_list)-(size_of_car+size_of_house)
 
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
+
+# Ground vertices
 vertices_list.append( (+0.5, 0, -0.8) )
 vertices_list.append( (+0.5, 0, +0.8) )
 vertices_list.append( (-0.5, 0, -0.8) )
@@ -117,15 +96,13 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == True:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     if gh.polygonal_mode == False:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-
-    
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)    
 
     # Exibe HOUSE
     verticesOnDisplay = 0
-    verticesToDisplay = size_of_house
+    verticesToDisplay = houseNumOfVert
     r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 1.0, .01, 0.0 )
+    t = glm.vec3( 1.0, 0, 0.0 )
     s = glm.vec3( .15, .15, .15 )
     mat_model = gh.model(r, t, s, angle = 0)
 
@@ -133,7 +110,7 @@ while not glfw.window_should_close(window):
 
     # Exige CARRO
     verticesOnDisplay = verticesToDisplay
-    verticesToDisplay += size_of_car
+    verticesToDisplay += carNumOfVertices
     r = glm.vec3( 1.0, 1.0, 0.0 )
     t = glm.vec3( 1.0, .01, 2.0 )
     s = glm.vec3( 0.4, 0.4, 0.4 )
@@ -143,7 +120,7 @@ while not glfw.window_should_close(window):
 
     # Exibe SKYBOX
     verticesOnDisplay = verticesToDisplay
-    verticesToDisplay += size_of_sky
+    verticesToDisplay += skyNumOfVertices
     r = glm.vec3( 1.0, 1.0, 0.0 )
     t = glm.vec3( 0.0, -.5, 0.0 )
     s = glm.vec3( 500, 500, 500 )
