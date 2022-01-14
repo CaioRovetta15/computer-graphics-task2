@@ -12,64 +12,26 @@ import glm
 import math
 from PIL import Image
 import glhandler as gh
+from scene import Scene
 
+scene = Scene()
 
 # Inicializando janela
-
 window = gh.setWindow(960, 1280, "Trabalho 2")
 
 program = gh.setGPU()
 
-loc_color = glGetUniformLocation(program, "color")
 glEnable(GL_TEXTURE_2D)
 qtd_texturas = 10
 textures = glGenTextures(qtd_texturas)
 
-# A lista abaixo armazena todos os vertices carregados dos arquivos
+scene.appendModel("House", "3dFiles/house/house2.obj", "3dFiles/house/wood.png")
+scene.appendModel("Outlaw", "3dFiles/exterior/outlaw car/outlaw.obj", "3dFiles/exterior/outlaw car/outlaw.png")
+scene.appendModel("Police", "3dFiles/exterior/police car/police.obj", "3dFiles/exterior/police car/police.png")
+scene.appendModel("Sky", "3dFiles/sky/sky.obj", "3dFiles/sky/sky2.png")
+scene.appendModel("Grass", "3dFiles/ground/grass/grass.obj", "3dFiles/ground/grass/grass.jpeg")
 
-vertices_list = []
-normals_list = []
-textures_coord_list = []
-
-# Vamos carregar cada modelo e definir funções para desenhá-los
-
-## Inserindo o modelo CASA
-modelo = gh.load_model_from_file('3dFiles/house/house2.obj')
-houseNumOfVert = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
-print('Processando modelo house2.obj. Vertice final:', len(vertices_list) )
-
-gh.load_texture_from_file(0, "3dFiles/house/wood.png")
-
-## Inserindo o modelo CARRO
-modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
-carNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
-print('Processando modelo outlaw.obj. Vertice final:', len(vertices_list))
-
-gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
-
-## Inserindo o modelo SKYBOX
-modelo = gh.load_model_from_file('3dFiles/sky/sky.obj')
-skyNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
-print('Processando modelo sky.obj. Vertice final:', len(vertices_list))
-
-gh.load_texture_from_file(2, '3dFiles/sky/sky2.png')
-
-vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
-
-# Ground vertices
-vertices_list.append( (+0.5, 0, -0.8) )
-vertices_list.append( (+0.5, 0, +0.8) )
-vertices_list.append( (-0.5, 0, -0.8) )
-vertices_list.append( (-0.5, 0, +0.8) )
-
-vertices['position'] = vertices_list
-
-textures = np.zeros(len(textures_coord_list), [("position", np.float32, 2)])  # duas coordenadas
-textures['position'] = textures_coord_list
-
-# Dados de iluminação: vetores normais
-normals = np.zeros(len(normals_list), [("position", np.float32, 3)])  # três coordenadas
-normals['position'] = normals_list
+vertices, textures, normals = scene.getVTN()
 
 #  Enviando coordenadas de vértices, texturas e dados de iluminacao para a GPU
 gh.setGPUBuffer(program, vertices, textures, normals)
@@ -81,7 +43,6 @@ glfw.set_mouse_button_callback(window, gh.mouse_button_callback)
 # Nesse momento, exibimos a janela.
 glfw.show_window(window)
 glfw.set_cursor_pos(window, gh.lastX, gh.lastY)
-
 glEnable(GL_DEPTH_TEST)  # importante para 3D
 
 while not glfw.window_should_close(window):
@@ -98,46 +59,46 @@ while not glfw.window_should_close(window):
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)    
 
     # Exibe HOUSE
-    verticesOnDisplay = 0
-    verticesToDisplay = houseNumOfVert
     r = glm.vec3( 1.0, 1.0, 0.0 )
     t = glm.vec3( 1.0, 0, 0.0 )
     s = glm.vec3( .15, .15, .15 )
-    mat_model = gh.model(r, t, s, angle = 0)
-
-    gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 0)
+    model_mat = gh.model(r, t, s, angle = 0)
+    scene.drawModelbyName(program, "House", model_mat)
 
     # Exige CARRO
-    verticesOnDisplay = verticesToDisplay
-    verticesToDisplay += carNumOfVertices
     r = glm.vec3( 1.0, 1.0, 0.0 )
     t = glm.vec3( 1.0, .01, 2.0 )
     s = glm.vec3( 0.4, 0.4, 0.4 )
-    mat_model = gh.model( r, t, s, angle = 0)
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Outlaw", model_mat)
 
-    gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 1)
 
     # Exibe SKYBOX
-    verticesOnDisplay = verticesToDisplay
-    verticesToDisplay += skyNumOfVertices
     r = glm.vec3( 1.0, 1.0, 0.0 )
     t = glm.vec3( 0.0, -.5, 0.0 )
     s = glm.vec3( 500, 500, 500 )
-    mat_model = gh.model( r, t, s, angle = 0)
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Sky", model_mat)
 
-    gh.draw_model(program, mat_model, 1.0,0.0, verticesOnDisplay, verticesToDisplay-1, 2)
+    # Exibe GRASS
+    r = glm.vec3( 1.0, 0.0, 0.0 )
+    t = glm.vec3( 0.0, 0.0, 0.0 )
+    s = glm.vec3( 0.5, 0.5, 0.5)
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Grass", model_mat)
 
-    # Exibe o CHAO
-    verticesOnDisplay = verticesToDisplay
-    verticesToDisplay += 4
-    r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 1.0, -.01, 0.0 )
-    s = glm.vec3( 50, 50, 50 )
-    mat_model = gh.model( r, t, s, angle = 0)
+    # Exibe GRASS
+    r = glm.vec3( 1.0, 0.0, 0.0 )
+    t = glm.vec3( 0.0, 5.0, 0.0 )
+    s = glm.vec3( 0.5, 0.5, 0.5)
+    model_mat = gh.model( r, t, s, angle = 0)
+    scene.drawModelbyName(program, "Grass", model_mat)
+    # # Exibe o CHAO
+    # r = glm.vec3( 1.0, 1.0, 0.0 )
+    # t = glm.vec3( 1.0, -.01, 0.0 )
+    # s = glm.vec3( 50, 50, 50 )
+    # model_mat = gh.model( r, t, s, angle = 0)
 
-    loc_model = glGetUniformLocation(program, "model")
-    glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
-    glDrawArrays(GL_TRIANGLE_STRIP, verticesOnDisplay, verticesToDisplay)
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")

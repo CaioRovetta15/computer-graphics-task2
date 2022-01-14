@@ -2,6 +2,7 @@ import glfw
 from OpenGL.GL import *
 import OpenGL.GL.shaders
 import glm
+import numpy as np
 
 from PIL import Image
 
@@ -15,10 +16,23 @@ class Object:
         # indice da textura
         self.texture_id = None
         # transformação
-        self.model = glm.mat4(1.0)
+        self.model_mat = glm.mat4(1.0)
+        self.ka = 0.7
+        self.kd = 0.7
     
-    def draw_model(self):
-        glDrawArrays(GL_TRIANGLE, self.begin_ind, self.end_ind)
+    def drawModel(self, program):
+
+        # define id da textura do modelo
+        glBindTexture(GL_TEXTURE_2D, self.texture_id)
+
+        loc_ka = glGetUniformLocation(program, "ka")  # recuperando localizacao da variavel ka na GPU
+        glUniform1f(loc_ka, self.ka)  # envia ka pra gpu
+
+        loc_kd = glGetUniformLocation(program, "kd")  # recuperando localizacao da variavel ka na GPU
+        glUniform1f(loc_kd, self.kd)  # envia kd pra gpu
+        loc_model = glGetUniformLocation(program, "model")
+        glUniformMatrix4fv(loc_model, 1, GL_TRUE, self.model_mat)
+        glDrawArrays(GL_TRIANGLES, self.begin_ind, self.end_ind-self.begin_ind+1)
     
 class Scene:
     def __init__(self):
@@ -33,9 +47,9 @@ class Scene:
         obj = Object()
         obj.name = name
         # model_id guarda o número do objeto.
-        # se existir apenas 1 objeto, o model_id desse objeto é 0. 
-        obj.model_id = len(self.objects) - 1
-        obj.texture_id = len(self.objects) - 1
+        # se existir apenas 1 objeto, o model_id do objeto anterior é 0 e do novo é 1. 
+        obj.model_id = len(self.objects) 
+        obj.texture_id = len(self.objects)
         obj.begin_ind = len(self.vertices_list)
 
         self.load_texture_from_file(obj.texture_id, texture)
@@ -52,7 +66,9 @@ class Scene:
         
         obj.end_ind = len(self.vertices_list) - 1
 
-    def load_model_from_file(filename):
+        self.objects.append(obj)
+
+    def load_model_from_file(self, filename):
         """Loads a Wavefront OBJ file. """
         objects = {}
         vertices = []
@@ -108,7 +124,7 @@ class Scene:
 
         return model
 
-    def load_texture_from_file(texture_id, img_textura):
+    def load_texture_from_file(self, texture_id, img_textura):
 
         glBindTexture(GL_TEXTURE_2D, texture_id)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
@@ -121,3 +137,25 @@ class Scene:
         image_data = img.tobytes("raw", "RGB", 0, -1)
         #image_data = np.array(list(img.getdata()), np.uint8)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
+    
+    def getVTN(self):
+
+        vertices = np.zeros(len(self.vertices_list), [("position", np.float32, 3)])
+        vertices['position'] = self.vertices_list
+
+        textures = np.zeros(len(self.textures_coord_list), [("position", np.float32, 2)])  # duas coordenadas
+        textures['position'] = self.textures_coord_list
+
+        # Dados de iluminação: vetores normais
+        normals = np.zeros(len(self.normals_list), [("position", np.float32, 3)])  # três coordenadas
+        normals['position'] = self.normals_list
+
+        return vertices, textures, normals
+    
+    def drawModelbyName(self, program, name, model_mat):
+        
+        for obj in self.objects:
+            if obj.name == name:
+                obj.model_mat = model_mat
+                obj.drawModel(program)
+

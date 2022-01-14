@@ -16,7 +16,7 @@ cameraPos,cameraFront,cameraUp = glm.vec3(0,.43,1),glm.vec3(0,0,-1),glm.vec3(0,1
 
 polygonal_mode = False
 
-ka_inc, kd_inc = 0.0, 0.0
+ka_inc, kd_inc = 0.5, 0.5
 
 altura = 960
 largura = 1280
@@ -343,20 +343,3 @@ def mouse_button_callback(window, button, action, mods):
     if button == 0 and action == 0:
         isRightButtonPressed = False
         print("Right button released")
-
-def appendModel( modelo, vertices_list, textures_coord_list, normals_list ) :
-
-    vecticesAux = vertices_list.copy()
-
-    # inserindo vertices do modelo no vetor de vertices
-    for face in modelo['faces']:
-        for vertice_id in face[0]:
-            vertices_list.append(modelo['vertices'][vertice_id-1])
-        for texture_id in face[1]:
-            textures_coord_list.append(modelo['texture'][texture_id-1])
-        for normal_id in face[2]:
-            normals_list.append(modelo['normals'][normal_id-1])
-
-    modelNumOfVertices = len(vertices_list)-len(vecticesAux)
-
-    return modelNumOfVertices
