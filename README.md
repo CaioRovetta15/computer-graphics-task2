@@ -22,7 +22,7 @@ First of all, when you start the program you will be inside the house, where you
 ![alt text](https://i.imgur.com/wRrG2nu.png)
 
 In the scene you can control the camera with the **WASD** keys and the mouse.
-You can anter the "fligth mode" by pressing the **F** key, witch enable you to leave the ground. While in the flight mode you can go up by pressing the **SPACE BAR** and go down pressing the **shift** key.
+You can anter the "flight mode" by pressing the **F** key, witch enable you to leave the ground. While in the flight mode you can go up by pressing the **SPACE BAR** and go down pressing the **L SHIFT** key.
 Besides that pressing the **P** key you enter the mesh view mode in witch you can see all the meshes without the textures.
 
 ![alt text](https://i.imgur.com/8PdQ7vL.gif)
@@ -35,7 +35,7 @@ This project were divided in two files:
 
 ### ``glhandler.py``
 
-Holds all the specific OpenGL settings with the GPU buffer and the window. It also sets the key bindings to the game controls. And it reads all the Wavefront files and bind all textures.
+Holds all the specific OpenGL settings with the GPU buffer and the window. Sets the key bindings to the scene controls. It also reads all the Wavefront files and bind all textures.
 
 
 
