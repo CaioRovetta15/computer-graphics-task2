@@ -34,7 +34,7 @@ textures_coord_list = []
 
 # Vamos carregar cada modelo e definir funções para desenhá-los
 
-modelo = gh.load_model_from_file('3dFiles/house/House.obj')
+modelo = gh.load_model_from_file('3dFiles/house/house2.obj')
 
 # inserindo vertices do modelo no vetor de vertices
 for face in modelo['faces']:
@@ -46,7 +46,7 @@ for face in modelo['faces']:
         normals_list.append(modelo['normals'][normal_id-1])
 print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
-gh.load_texture_from_file(0, '3dFiles/house/bricks.jpeg')
+gh.load_texture_from_file(0, '3dFiles/interior/chair/wood.jpg')
 
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
 plane_vertices =  [
