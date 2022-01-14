@@ -41,19 +41,21 @@ print('Processando modelo house2.obj. Vertice final:', len(vertices_list) )
 
 gh.load_texture_from_file(0, '3dFiles/house/wood.png')
 
-## Inserindo o modelo CARRO
-modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
-carNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
-print('Processando modelo outlaw.obj. Vertice final:', len(vertices_list))
 
-gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
 
 ## Inserindo o modelo SKYBOX
-modelo = gh.load_model_from_file('3dFiles/sky/sky.obj')
+modelo = gh.load_model_from_file('3dFiles/exterior/outlaw car/outlaw.obj')
 skyNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
 print('Processando modelo sky.obj. Vertice final:', len(vertices_list))
 
-gh.load_texture_from_file(2, '3dFiles/sky/sky2.png')
+gh.load_texture_from_file(2, '3dFiles/exterior/outlaw car/Car Texture 1.png')
+
+## Inserindo o modelo CARRO
+modelo = gh.load_model_from_file('3dFiles/exterior/police car/police.obj')
+carNumOfVertices = gh.appendModel( modelo, vertices_list, textures_coord_list, normals_list )
+print('Processando modelo outlaw.obj. Vertice final:', len(vertices_list))
+
+gh.load_texture_from_file(1, '3dFiles/exterior/police car/Car Texture 2.png')
 
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
 
@@ -107,26 +109,31 @@ while not glfw.window_should_close(window):
     mat_model = gh.model(r, t, s, angle = 0)
 
     gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 0)
+    mat_model = None
 
-    # Exige CARRO
-    verticesOnDisplay = verticesToDisplay
-    verticesToDisplay += carNumOfVertices
-    r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 1.0, .01, 2.0 )
-    s = glm.vec3( 0.4, 0.4, 0.4 )
-    mat_model = gh.model( r, t, s, angle = 0)
-
-    gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 1)
+    
 
     # Exibe SKYBOX
     verticesOnDisplay = verticesToDisplay
     verticesToDisplay += skyNumOfVertices
     r = glm.vec3( 1.0, 1.0, 0.0 )
-    t = glm.vec3( 0.0, -.5, 0.0 )
-    s = glm.vec3( 500, 500, 500 )
+    t = glm.vec3( 1.0, .01, 5.0 )
+    s = glm.vec3( 0.4, 0.4, 0.4 )
     mat_model = gh.model( r, t, s, angle = 0)
 
     gh.draw_model(program, mat_model, 1.0,0.0, verticesOnDisplay, verticesToDisplay-1, 2)
+    mat_model = None
+
+    # Exige CARRO
+    verticesOnDisplay = verticesToDisplay
+    verticesToDisplay += carNumOfVertices
+    r = glm.vec3( 1.0, 1.0, 0.0 )
+    t = glm.vec3( 1.0, .01, 3.0 )
+    s = glm.vec3( 0.4, 0.4, 0.4 )
+    mat_model = gh.model( r, t, s, angle = 0)
+
+    gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 1)
+    mat_model = None
 
     # Exibe o CHAO
     verticesOnDisplay = verticesToDisplay
@@ -138,7 +145,7 @@ while not glfw.window_should_close(window):
 
     loc_model = glGetUniformLocation(program, "model")
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
-    glDrawArrays(GL_TRIANGLE_STRIP, verticesOnDisplay, verticesToDisplay)
+    glDrawArrays(GL_TRIANGLE_STRIP, verticesOnDisplay, len(vertices_list))
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")
