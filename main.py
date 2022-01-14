@@ -45,6 +45,7 @@ for face in modelo['faces']:
     for normal_id in face[2]:
         normals_list.append(modelo['normals'][normal_id-1])
 print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
+size_of_house = len(vertices_list)
 
 gh.load_texture_from_file(0, '3dFiles/house/wood.png')
 
@@ -60,19 +61,20 @@ for face in modelo['faces']:
 print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
 gh.load_texture_from_file(1, '3dFiles/exterior/outlaw car/Car Texture 1.png')
+size_of_car = len(vertices_list)-size_of_house
 
 
 vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
-plane_vertices =  [
-                            (+0.5, -2, -0.8),
-                            (+0.5, -2, +0.8),
-                            (-0.5, -2, -0.8),
-                            (-0.5, -2, +0.8)
-                        ]
-vertices_list.append( (+0.5, 0, -0.8) )
-vertices_list.append( (+0.5, 0, +0.8) )
-vertices_list.append( (-0.5, 0, -0.8) )
-vertices_list.append( (-0.5, 0, +0.8) )
+plane_vertices = [
+    (+0.5, -2, -0.8),
+    (+0.5, -2, +0.8),
+    (-0.5, -2, -0.8),
+    (-0.5, -2, +0.8)
+]
+vertices_list.append((+0.5, 0, -0.8))
+vertices_list.append((+0.5, 0, +0.8))
+vertices_list.append((-0.5, 0, -0.8))
+vertices_list.append((-0.5, 0, +0.8))
 vertices['position'] = vertices_list
 
 
@@ -109,16 +111,16 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == False:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    gh.draw_model(program, 0, len(vertices),0)
+    gh.draw_model(program, 0, size_of_house, 0)
 
-    gh.draw_model(program, 0, len(vertices),1)
+    gh.draw_model(program, size_of_house, size_of_car, 1)
 
     mat_model = gh.model(0, 1, 1, 0, 0, -.1, 0, 50, 50, 50)
     loc_model = glGetUniformLocation(program, "model")
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
     R, G, B = 1, 0, 0
     glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_TRIANGLE_STRIP, len(vertices) - 4, len(vertices))
+    glDrawArrays(GL_TRIANGLE_STRIP, size_of_car+size_of_house, len(vertices))
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")
