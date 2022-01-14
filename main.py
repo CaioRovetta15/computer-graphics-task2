@@ -32,10 +32,9 @@ textures_coord_list = []
 
 # Vamos carregar cada modelo e definir funções para desenhá-los
 
-modelo = gh.load_model_from_file('3dFiles/')
+modelo = gh.load_model_from_file('3dFiles/house/House.obj')
 
 # inserindo vertices do modelo no vetor de vertices
-print('Processando modelo cube.obj. Vertice inicial:', len(vertices_list))
 for face in modelo['faces']:
     for vertice_id in face[0]:
         vertices_list.append(modelo['vertices'][vertice_id-1])
@@ -45,10 +44,21 @@ for face in modelo['faces']:
         normals_list.append(modelo['normals'][normal_id-1])
 print('Processando modelo cube.obj. Vertice final:', len(vertices_list))
 
-gh.load_texture_from_file(0, 'Car_1.png')
+gh.load_texture_from_file(0, '3dFiles/house/bricks.jpeg')
 
-vertices = np.zeros(len(vertices_list), [("position", np.float32, 3)])
+vertices = np.zeros(4+len(vertices_list), [("position", np.float32, 3)])
+plane_vertices =  [
+                            (+0.5, -2, -0.8),
+                            (+0.5, -2, +0.8),
+                            (-0.5, -2, -0.8),
+                            (-0.5, -2, +0.8)
+                        ]
+vertices_list.append( (+0.5, -2, -0.8) )
+vertices_list.append( (+0.5, -2, +0.8) )
+vertices_list.append( (-0.5, -2, -0.8) )
+vertices_list.append( (-0.5, -2, +0.8) )
 vertices['position'] = vertices_list
+
 
 textures = np.zeros(len(textures_coord_list), [("position", np.float32, 2)])  # duas coordenadas
 textures['position'] = textures_coord_list
@@ -61,17 +71,28 @@ normals['position'] = normals_list
 gh.setGPUBuffer(program, vertices, textures, normals)
 
 firstMouse, isRightButtonPressed = True, False
+flyMode = False
 yaw, pitch = -90.0, 0.0
 lastX, lastY = gh.largura/2, gh.altura/2
 
 def key_event(window, key, scancode, action, mods):
-
+    global flyMode
     cameraSpeed = 0.05
     if key == 87 and (action == 1 or action == 2):  # tecla W
-        gh.cameraPos += cameraSpeed * gh.cameraFront
+        if not flyMode :
+            aux = cameraSpeed * gh.cameraFront
+            aux = glm.vec3(aux.x, 0, aux.z)
+            gh.cameraPos += aux
+        else :
+            gh.cameraPos += cameraSpeed * gh.cameraFront
 
     if key == 83 and (action == 1 or action == 2):  # tecla S
-        gh.cameraPos -= cameraSpeed * gh.cameraFront
+        if not flyMode :
+            aux = cameraSpeed * gh.cameraFront
+            aux = glm.vec3(aux.x, 0, aux.z)
+            gh.cameraPos -= aux
+        else :
+            gh.cameraPos -= cameraSpeed * gh.cameraFront
 
     if key == 65 and (action == 1 or action == 2):  # tecla A
         gh.cameraPos -= glm.normalize(glm.cross(gh.cameraFront, gh.cameraUp)) * cameraSpeed
@@ -79,17 +100,33 @@ def key_event(window, key, scancode, action, mods):
     if key == 68 and (action == 1 or action == 2):  # tecla D
         gh.cameraPos += glm.normalize(glm.cross(gh.cameraFront, gh.cameraUp)) * cameraSpeed
 
+    # P - Ativa e desativa GL_LINES
     if key == 80 and action == 1 and gh.polygonal_mode == True:
         gh.polygonal_mode = False
     else:
         if key == 80 and action == 1 and gh.polygonal_mode == False:
             gh.polygonal_mode = True
 
+    # F - Ativa e desativa modo FLY
+    if key == 70 and action == 1 and flyMode == True:
+        flyMode = False
+    else:
+        if key == 70 and action == 1 and flyMode == False:
+            flyMode = True
+
     if key == 265 and (action == 1 or action == 2):  # tecla cima
         gh.ka_inc += 0.05
 
     if key == 264 and (action == 1 or action == 2):  # tecla baixo
-        gh.kd_inc += 0.05
+        gh.kd_inc -= 0.05
+
+    if key == 32 and (action == 1 or action == 2) and flyMode:  # tecla espaco
+        gh.cameraPos += cameraSpeed * gh.cameraUp
+
+    if key == 340 and (action == 1 or action == 2) and flyMode:  # tecla shift direito
+        gh.cameraPos -= cameraSpeed * gh.cameraUp 
+
+    print(key)        
 
 def mouse_event(window, xpos, ypos):
     global firstMouse, yaw, pitch, lastX, lastY, isRightButtonPressed
@@ -169,7 +206,8 @@ while not glfw.window_should_close(window):
     if gh.polygonal_mode == False:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    gh.desenha_caixa(program, 0, len(vertices))
+    gh.desenha_caixa(program, 0, len(vertices) - 5)
+    glDrawArrays(GL_TRIANGLE_STRIP, len(vertices) - 4, len(vertices))
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")

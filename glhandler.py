@@ -21,6 +21,8 @@ ka_inc, kd_inc = 0.3, 0.5
 altura = 0
 largura = 0
 
+
+
 def setWindow(height, width, name):
 
     global altura, largura
@@ -245,12 +247,15 @@ def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
 
     # rotacao
     matrix_transform = glm.rotate(matrix_transform, angle, glm.vec3(r_x, r_y, r_z))
+    
     # translacao
     matrix_transform = glm.translate(matrix_transform, glm.vec3(t_x, t_y, t_z))
+
     # escala
     matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z))
+    
 
-    matrix_transform = np.array(matrix_transform)
+    matrix_transform = np.array(matrix_transform)  # pegando a transposta da matriz (glm trabalha com ela invertida)
 
     return matrix_transform
 
@@ -274,7 +279,7 @@ def desenha_caixa(program, begin, end):
     # aplica a matriz model
     angle = 0.0
     r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 1.0, -2.0, 0.0
+    t_x, t_y, t_z = 0.0, 2.0, 0.0
     s_x, s_y, s_z = 0.1, 0.1, 0.1
 
     mat_model = model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
