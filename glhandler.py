@@ -41,7 +41,6 @@ def setWindow(height, width, name):
 
     return window
 
-
 def setGPU():
 
     vertex_code = """
@@ -143,7 +142,6 @@ def setGPU():
 
     return program
 
-
 def load_model_from_file(filename):
     """Loads a Wavefront OBJ file. """
     objects = {}
@@ -200,7 +198,6 @@ def load_model_from_file(filename):
 
     return model
 
-
 def load_texture_from_file(texture_id, img_textura):
     glBindTexture(GL_TEXTURE_2D, texture_id)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
@@ -213,7 +210,6 @@ def load_texture_from_file(texture_id, img_textura):
     image_data = img.tobytes("raw", "RGB", 0, -1)
     #image_data = np.array(list(img.getdata()), np.uint8)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
-
 
 def setGPUBuffer(program, vertices, textures, normals):
 
@@ -252,33 +248,30 @@ def setGPUBuffer(program, vertices, textures, normals):
     loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
     glUniform3f(loc_light_pos, 0.0, 10.0, 0.0)  # posicao da fonte de luz
 
-
-def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
+def model( r, t, s, angle = 0):
 
     angle = math.radians(angle)
 
     matrix_transform = glm.mat4(1.0)  # instanciando uma matriz identidade
 
-    # rotacao
-    matrix_transform = glm.rotate(matrix_transform, angle, glm.vec3(r_x, r_y, r_z))
+    # eixo de rotacao + angulo
+    matrix_transform = glm.rotate(matrix_transform, angle, r )
 
     # translacao
-    matrix_transform = glm.translate(matrix_transform, glm.vec3(t_x, t_y, t_z))
+    matrix_transform = glm.translate(matrix_transform, t )
 
     # escala
-    matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z))
+    matrix_transform = glm.scale(matrix_transform, s )
 
     matrix_transform = np.array(matrix_transform)  # pegando a transposta da matriz (glm trabalha com ela invertida)
 
     return matrix_transform
-
 
 def view():
     global cameraPos, cameraFront, cameraUp
     mat_view = glm.lookAt(cameraPos, cameraPos + cameraFront, cameraUp)
     mat_view = np.array(mat_view).T
     return mat_view
-
 
 def projection():
     global altura, largura

@@ -124,40 +124,41 @@ while not glfw.window_should_close(window):
     # Exibe HOUSE
     verticesOnDisplay = 0
     verticesToDisplay = size_of_house
-    angle = 0.0
-    r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 0.0, .01, 0.0
-    s_x, s_y, s_z = .15, .15, .15
-    mat_model = gh.model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    r = glm.vec3( 1.0, 1.0, 0.0 )
+    t = glm.vec3( 1.0, .01, 0.0 )
+    s = glm.vec3( .15, .15, .15 )
+    mat_model = gh.model(r, t, s, angle = 0)
 
     gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 0)
 
     # Exige CARRO
     verticesOnDisplay = verticesToDisplay
     verticesToDisplay += size_of_car
-    angle = 0.0
-    r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 0.0, .01, 2.0
-    s_x, s_y, s_z = 0.4, 0.4, 0.4
-    mat_model = gh.model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    r = glm.vec3( 1.0, 1.0, 0.0 )
+    t = glm.vec3( 1.0, .01, 2.0 )
+    s = glm.vec3( 0.4, 0.4, 0.4 )
+    mat_model = gh.model( r, t, s, angle = 0)
 
     gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 1)
 
     # Exibe SKYBOX
     verticesOnDisplay = verticesToDisplay
     verticesToDisplay += size_of_sky
-    angle = 0.0
-    r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 0.0,-0.1, 0.0
-    s_x, s_y, s_z =  50,  50,  50
-    mat_model = gh.model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
+    r = glm.vec3( 1.0, 1.0, 0.0 )
+    t = glm.vec3( 0.0, -.5, 0.0 )
+    s = glm.vec3( 500, 500, 500 )
+    mat_model = gh.model( r, t, s, angle = 0)
 
-    gh.draw_model(program, mat_model, 0.3,0.3, verticesOnDisplay, verticesToDisplay-1, 2)
+    gh.draw_model(program, mat_model, 1.0,0.0, verticesOnDisplay, verticesToDisplay-1, 2)
 
     # Exibe o CHAO
     verticesOnDisplay = verticesToDisplay
     verticesToDisplay += 4
-    mat_model = gh.model(0, 1, 1, 0, 0, -.1, 0, 50, 50, 50)
+    r = glm.vec3( 1.0, 1.0, 0.0 )
+    t = glm.vec3( 1.0, -.01, 0.0 )
+    s = glm.vec3( 50, 50, 50 )
+    mat_model = gh.model( r, t, s, angle = 0)
+
     loc_model = glGetUniformLocation(program, "model")
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
     glDrawArrays(GL_TRIANGLE_STRIP, verticesOnDisplay, verticesToDisplay)
