@@ -16,7 +16,7 @@ cameraPos,cameraFront,cameraUp = glm.vec3(0,.43,1),glm.vec3(0,0,-1),glm.vec3(0,1
 
 polygonal_mode = False
 
-ka_inc, kd_inc = 0.3, 0.5
+ka_inc, kd_inc = 0.0, 0.0
 
 altura = 960
 largura = 1280
@@ -288,7 +288,7 @@ def projection():
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
-def draw_model(program, mat_model, begin, end, texture_id):
+def draw_model(program, mat_model, ka, kd, begin, end, texture_id):
     global ka_inc, kd_inc
 
     
@@ -296,8 +296,8 @@ def draw_model(program, mat_model, begin, end, texture_id):
     glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
 
     # define parametros de ilumincao do modelo
-    ka = ka_inc  # coeficiente de reflexao ambiente do modelo
-    kd = kd_inc  # coeficiente de reflexao difusa do modelo
+    ka += ka_inc  # coeficiente de reflexao ambiente do modelo
+    kd += kd_inc  # coeficiente de reflexao difusa do modelo
 
     loc_ka = glGetUniformLocation(program, "ka")  # recuperando localizacao da variavel ka na GPU
     glUniform1f(loc_ka, ka)  # envia ka pra gpu
