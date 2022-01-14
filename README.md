@@ -20,7 +20,7 @@ The program was a very interesting way to exercise OpenGL programming and to und
 
 First of all, when you start the program you will be inside the house, where you can see some forniture, like some chairs, a sofa, a table and a man:
 
-![alt text](https://imgur.com/a/1xUvWaS)
+![alt text](https://i.imgur.com/kxQCtyW.png)
 
 This is a "game" that you can control a red spaceship and fly away of the Earth. 
 To control it you can use **WASD** or the **ArrowKeys** and to rotate it, use **Q** to rotate to the left and **E** to the right.
