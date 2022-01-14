@@ -304,7 +304,6 @@ def draw_model(program, mat_model, ka, kd, begin, end, texture_id):
     # desenha o modelo
     glDrawArrays(GL_TRIANGLES, begin, end)  # renderizando
 
-
 def key_event(window, key, scancode, action, mods):
     global flyMode
     global ka_inc, kd_inc
@@ -368,7 +367,6 @@ def key_event(window, key, scancode, action, mods):
         if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
         if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
-
 def mouse_event(window, xpos, ypos):
     global firstMouse, yaw, pitch, lastX, lastY, isRightButtonPressed, cameraFront
     if firstMouse:
@@ -404,7 +402,6 @@ def mouse_event(window, xpos, ypos):
     front.z = math.sin(glm.radians(yaw)) * math.cos(glm.radians(pitch))
     cameraFront = glm.normalize(front)
 
-
 def mouse_button_callback(window, button, action, mods):
 
     global isRightButtonPressed
@@ -415,3 +412,20 @@ def mouse_button_callback(window, button, action, mods):
     if button == 0 and action == 0:
         isRightButtonPressed = False
         print("Right button released")
+
+def appendModel( modelo, vertices_list, textures_coord_list, normals_list ) :
+
+    vecticesAux = vertices_list.copy()
+
+    # inserindo vertices do modelo no vetor de vertices
+    for face in modelo['faces']:
+        for vertice_id in face[0]:
+            vertices_list.append(modelo['vertices'][vertice_id-1])
+        for texture_id in face[1]:
+            textures_coord_list.append(modelo['texture'][texture_id-1])
+        for normal_id in face[2]:
+            normals_list.append(modelo['normals'][normal_id-1])
+
+    modelNumOfVertices = len(vertices_list)-len(vecticesAux)
+
+    return modelNumOfVertices
