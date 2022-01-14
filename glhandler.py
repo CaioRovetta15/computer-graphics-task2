@@ -18,14 +18,17 @@ polygonal_mode = False
 
 ka_inc, kd_inc = 0.3, 0.5
 
-altura = 0
-largura = 0
+altura = 960
+largura = 1280
 
+flyMode = False
 
+firstMouse, isRightButtonPressed = True, False
+
+yaw, pitch = -90.0, 0.0
+lastX, lastY = largura/2, altura/2
 
 def setWindow(height, width, name):
-
-    global altura, largura
 
     altura, largura = height, width
     glfw.init()
@@ -240,7 +243,7 @@ def setGPUBuffer(program, vertices, textures, normals):
     #  Dados de iluminação: posição da fonte de luz
 
     loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
-    glUniform3f(loc_light_pos, -1.5, 1.7, 2.5)  # posicao da fonte de luz
+    glUniform3f(loc_light_pos, 0.0, 10.0, 0.0)  # posicao da fonte de luz
 
 def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
 
@@ -268,20 +271,20 @@ def view():
     return mat_view
 
 def projection():
-
     global altura, largura
+
     # perspective parameters: fovy, aspect, near, far
     mat_projection = glm.perspective(glm.radians(90.0), largura/altura, 0.01, 1000.0)
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
-def draw_model(program, begin, end,texture_id):
+def draw_model(program, begin, end):
     global ka_inc, kd_inc
-    
+
     # aplica a matriz model
     angle = 0.0
     r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 0.0, -.1, 0.0
+    t_x, t_y, t_z = 0.0, 0.01, 0.0
     s_x, s_y, s_z = 0.1, 0.1, 0.1
 
     mat_model = model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
@@ -304,41 +307,107 @@ def draw_model(program, begin, end,texture_id):
     # desenha o modelo
     glDrawArrays(GL_TRIANGLES  , begin, end)  # renderizando
 
-# dt_x, dt_y = 0, 0
-# dtheta = 0
+def key_event(window, key, scancode, action, mods):
+    global flyMode
+    global ka_inc, kd_inc
+    global cameraPos, cameraFront, cameraUp
+    global polygonal_mode
 
-# # Catching keyboard events 
-# def key_event(window,key,scancode,action,mods):
-    
-#     # Ship states
-#     global dt_x, dt_y, dtheta
-#     if action!=0:
-#         if (key == 265) | (key == 87):
-#             dt_y = +0.02
-#         if (key == 264) | (key == 83):
-#             dt_y = -0.02
-#         if (key == 263) | (key == 65):
-#             dt_x = -0.02
-#         if (key == 262) | (key == 68):
-#             dt_x = +0.02
-#         if (key == 81):
-#             dtheta = +0.1
-#         if (key == 69):
-#             dtheta = -0.1
+    cameraSpeed = 0.05
+    if key == 87 and (action == 1 or action == 2):  # tecla W
+        if not flyMode :
+            aux = cameraSpeed * cameraFront
+            aux = glm.vec3(aux.x, 0, aux.z)
+            cameraPos += aux
+        else :
+            cameraPos += cameraSpeed * cameraFront
 
-#     print('[key event] key=',key)
-#     print('[key event] scancode=',scancode)
-#     print('[key event] action=',action)
-#     print('[key event] mods=',mods)
-#     print('-------')
+    if key == 83 and (action == 1 or action == 2):  # tecla S
+        if not flyMode :
+            aux = cameraSpeed * cameraFront
+            aux = glm.vec3(aux.x, 0, aux.z)
+            cameraPos -= aux
+        else :
+            cameraPos -= cameraSpeed * cameraFront
 
-# # Catching mouse events
-# def mouse_event(window,button,action,mods):
-#     print('[mouse event] button=',button)
-#     print('[mouse event] action=',action)
-#     print('[mouse event] mods=',mods)
-#     print('-------')
+    if key == 65 and (action == 1 or action == 2):  # tecla A
+        cameraPos -= glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
 
+    if key == 68 and (action == 1 or action == 2):  # tecla D
+        cameraPos += glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
 
+    # P - Ativa e desativa GL_LINES
+    if key == 80 and action == 1 and polygonal_mode == True:
+        polygonal_mode = False
+    else:
+        if key == 80 and action == 1 and polygonal_mode == False:
+            polygonal_mode = True
+
+    # F - Ativa e desativa modo FLY
+    if key == 70 and action == 1 and flyMode == True:
+        flyMode = False
+    else:
+        if key == 70 and action == 1 and flyMode == False:
+            flyMode = True
+
+    if key == 265 and (action == 1 or action == 2):  # tecla cima
+        ka_inc += 0.05
+
+    if key == 264 and (action == 1 or action == 2):  # tecla baixo
+        kd_inc -= 0.05
+
+    if key == 32 and (action == 1 or action == 2) and flyMode:  # tecla espaco
+        cameraPos += cameraSpeed * cameraUp
+
+    if key == 340 and (action == 1 or action == 2) and flyMode:  # tecla shift direito
+        cameraPos -= cameraSpeed * cameraUp 
+
+    print(key)        
+
+def mouse_event(window, xpos, ypos):
+    global firstMouse, yaw, pitch, lastX, lastY, isRightButtonPressed, cameraFront
+    if firstMouse :
+        lastX = xpos
+        lastY = ypos
+        firstMouse = False
+
+    if not isRightButtonPressed : 
+        lastX = xpos
+        lastY = ypos
+        return
+
+    xoffset = xpos - lastX
+    yoffset = lastY - ypos
+    lastX = xpos
+    lastY = ypos
+
+    sensitivity = 0.15
+    xoffset *= sensitivity
+    yoffset *= sensitivity
+
+    yaw -= xoffset
+    pitch -= yoffset
+
+    if pitch >= 90.0:
+        pitch = 90.0
+    if pitch <= -90.0:
+        pitch = -90.0
+
+    front = glm.vec3()
+    front.x = math.cos(glm.radians(yaw)) * math.cos(glm.radians(pitch))
+    front.y = math.sin(glm.radians(pitch))
+    front.z = math.sin(glm.radians(yaw)) * math.cos(glm.radians(pitch))
+    cameraFront = glm.normalize(front)
+
+def mouse_button_callback(window, button, action, mods):
+
+    global isRightButtonPressed
+
+    if button == 0 and action == 1:
+        isRightButtonPressed = True
+        print("Right button clicked")
+    if button == 0 and action == 0:
+        isRightButtonPressed = False
+        print("Right button released")
 
 
