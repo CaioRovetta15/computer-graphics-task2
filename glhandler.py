@@ -235,12 +235,7 @@ def setGPUBuffer(program, vertices, textures, normals):
     glEnableVertexAttribArray(loc_normals_coord)
     glVertexAttribPointer(loc_normals_coord, 3, GL_FLOAT, False, stride, offset)
 
-    #  Dados de iluminação: posição da fonte de luz
-
-    loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
-    glUniform3f(loc_light_pos, -1.5, 1.7, 2.5)  # posicao da fonte de luz
-
-    return loc_light_pos
+    return
 
 def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
 
@@ -248,14 +243,14 @@ def model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z):
 
     matrix_transform = glm.mat4(1.0)  # instanciando uma matriz identidade
 
+    # escala
+    matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z))
     # rotacao
     matrix_transform = glm.rotate(matrix_transform, angle, glm.vec3(r_x, r_y, r_z))
     # translacao
     matrix_transform = glm.translate(matrix_transform, glm.vec3(t_x, t_y, t_z))
-    # escala
-    matrix_transform = glm.scale(matrix_transform, glm.vec3(s_x, s_y, s_z))
 
-    matrix_transform = np.array(matrix_transform).T  # pegando a transposta da matriz (glm trabalha com ela invertida)
+    matrix_transform = np.array(matrix_transform)
 
     return matrix_transform
 
@@ -277,9 +272,9 @@ def desenha_caixa(program, begin, end):
     global ka_inc, kd_inc
     
     # aplica a matriz model
-    angle = 45.0
+    angle = 0.0
     r_x, r_y, r_z = 1.0, 1.0, 0.0
-    t_x, t_y, t_z = 0.0, 0.0, 0.0
+    t_x, t_y, t_z = 1.0, -2.0, 0.0
     s_x, s_y, s_z = 0.1, 0.1, 0.1
 
     mat_model = model(angle, r_x, r_y, r_z, t_x, t_y, t_z, s_x, s_y, s_z)
