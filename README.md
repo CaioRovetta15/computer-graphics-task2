@@ -27,8 +27,6 @@ In the scene you can control the camera with the **WASD** keys and the mouse.
 
 You can anter the "flight mode" by pressing the **F** key, witch enable you to leave the ground. While in the flight mode you can go up by pressing the **SPACE BAR** and go down pressing the **Left SHIFT** key.
 
-![alt text](https://i.imgur.com/rEXxUEs.gif)
-
 Besides that pressing the **P** key you enter the mesh view mode in witch you can see all the meshes without the textures.
 
 ![alt text](https://i.imgur.com/wsduhlo.gif)
