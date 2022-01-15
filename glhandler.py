@@ -214,28 +214,6 @@ def projection():
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
-def draw_model(program, mat_model, ka, kd, begin, end, texture_id):
-    global ka_inc, kd_inc
-
-    loc_model = glGetUniformLocation(program, "model")
-    glUniformMatrix4fv(loc_model, 1, GL_TRUE, mat_model)
-
-    # define parametros de ilumincao do modelo
-    ka += ka_inc  # coeficiente de reflexao ambiente do modelo
-    kd += kd_inc  # coeficiente de reflexao difusa do modelo
-
-    loc_ka = glGetUniformLocation(program, "ka")  # recuperando localizacao da variavel ka na GPU
-    glUniform1f(loc_ka, ka)  # envia ka pra gpu
-
-    loc_kd = glGetUniformLocation(program, "kd")  # recuperando localizacao da variavel ka na GPU
-    glUniform1f(loc_kd, kd)  # envia kd pra gpu
-
-    # define id da textura do modelo
-    glBindTexture(GL_TEXTURE_2D, texture_id)
-
-    # desenha o modelo
-    glDrawArrays(GL_TRIANGLES, begin, end)  # renderizando
-
 def key_event(window, key, scancode, action, mods):
     global flyMode
     global ka_inc, kd_inc
