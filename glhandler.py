@@ -12,7 +12,7 @@ import glm
 import math
 from PIL import Image
 
-cameraPos,cameraFront,cameraUp = glm.vec3(-1.15,.43,.15),glm.vec3(0,0,-1),glm.vec3(0,1,0)
+cameraPos,cameraFront,cameraUp = glm.vec3(.2,.43,.7),glm.vec3(0,0,1),glm.vec3(0,1,0)
 
 polygonal_mode = False
 
@@ -25,11 +25,13 @@ flyMode = False
 
 firstMouse, isRightButtonPressed = True, False
 
-yaw, pitch = -90.0, 0.0
+yaw, pitch = 90.0, 0.0
+FOV = 70
 lastX, lastY = largura/2, altura/2
 
 heightMinLimit = .43
 heightMaxLimit = 10
+scenaryLimit = 15
 
 def setWindow(height, width, name):
 
@@ -205,10 +207,10 @@ def view():
     return mat_view
 
 def projection():
-    global altura, largura
+    global altura, largura, FOV
 
     # perspective parameters: fovy, aspect, near, far
-    mat_projection = glm.perspective(glm.radians(90.0), largura/altura, 0.01, 1000.0)
+    mat_projection = glm.perspective(glm.radians(FOV), largura/altura, 0.01, 1000.0)
     mat_projection = np.array(mat_projection).T
     return mat_projection
 
@@ -239,6 +241,7 @@ def key_event(window, key, scancode, action, mods):
     global ka_inc, kd_inc
     global cameraPos, cameraFront, cameraUp
     global polygonal_mode
+    global FOV
 
     cameraSpeed = 0.05
     if key == 87 and (action == 1 or action == 2):  # tecla W
@@ -246,10 +249,16 @@ def key_event(window, key, scancode, action, mods):
             aux = cameraSpeed * cameraFront
             aux = glm.vec3(aux.x, 0, aux.z)
             cameraPos += aux
+
         else:
             cameraPos += cameraSpeed * cameraFront
             if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
             if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
+
+        if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
+        if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
     if key == 83 and (action == 1 or action == 2):  # tecla S
         if not flyMode:
@@ -260,12 +269,26 @@ def key_event(window, key, scancode, action, mods):
             cameraPos -= cameraSpeed * cameraFront
             if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
             if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
+        
+        if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
+        if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
     if key == 65 and (action == 1 or action == 2):  # tecla A
         cameraPos -= glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
+        if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
+        if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
+
 
     if key == 68 and (action == 1 or action == 2):  # tecla D
         cameraPos += glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
+        if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
+        if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
+        if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
     # P - Ativa e desativa GL_LINES
     if key == 80 and action == 1 and polygonal_mode == True:
@@ -282,10 +305,14 @@ def key_event(window, key, scancode, action, mods):
             flyMode = True
 
     if key == 265 and (action == 1 or action == 2):  # tecla cima
-        ka_inc += 0.05
+        FOV += 0.5
+        if FOV < 30 : FOV = 30
+        if FOV > 120 : FOV = 120
 
     if key == 264 and (action == 1 or action == 2):  # tecla baixo
-        kd_inc -= 0.05
+        FOV -= 0.5
+        if FOV < 30 : FOV = 30
+        if FOV > 120 : FOV = 120
 
     if key == 32 and (action == 1 or action == 2) and flyMode:  # tecla espaco
         cameraPos += cameraSpeed * cameraUp
