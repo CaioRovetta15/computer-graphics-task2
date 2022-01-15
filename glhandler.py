@@ -12,23 +12,28 @@ import glm
 import math
 from PIL import Image
 
+# Posicao inicial do jogador
 cameraPos,cameraFront,cameraUp = glm.vec3(.2,.43,.7),glm.vec3(0,0,1),glm.vec3(0,1,0)
 
+# Opcoes especiais inicialmente desativadas
 polygonal_mode = False
+flyMode = False
+isRightButtonPressed =  False
 
+# Coef de Reflexao e Difusao padrao
 ka_inc, kd_inc = 0.5, 0.5
 
-altura = 960
-largura = 1280
+# Tamanho base de janela
+altura = 350
+largura = 350
 
-flyMode = False
-
-firstMouse, isRightButtonPressed = True, False
+firstMouse = True
 
 yaw, pitch = 90.0, 0.0
-FOV = 70
+FOV = 90
 lastX, lastY = largura/2, altura/2
 
+# Configura os limites do cenario
 heightMinLimit = .43
 heightMaxLimit = 10
 scenaryLimit = 15
@@ -177,7 +182,6 @@ def setGPUBuffer(program, vertices, textures, normals):
     glVertexAttribPointer(loc_normals_coord, 3, GL_FLOAT, False, stride, offset)
 
     #  Dados de iluminação: posição da fonte de luz
-
     loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
     glUniform3f(loc_light_pos, 10.0, 30.0, -10.0)  # posicao da fonte de luz
 
@@ -243,23 +247,26 @@ def key_event(window, key, scancode, action, mods):
     global polygonal_mode
     global FOV
 
-    cameraSpeed = 0.05
+    cameraSpeed = 0.06
+
+    # TECLA S - Anda para frente
     if key == 87 and (action == 1 or action == 2):  # tecla W
         if not flyMode:
             aux = cameraSpeed * cameraFront
             aux = glm.vec3(aux.x, 0, aux.z)
             cameraPos += aux
-
         else:
             cameraPos += cameraSpeed * cameraFront
             if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
             if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
+        # Limitacao de cenario ( parede invisivel )
         if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
         if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
+    # TECLA S - Anda para atras
     if key == 83 and (action == 1 or action == 2):  # tecla S
         if not flyMode:
             aux = cameraSpeed * cameraFront
@@ -270,55 +277,63 @@ def key_event(window, key, scancode, action, mods):
             if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
             if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
         
+        # Limitacao de cenario ( parede invisivel )
         if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
         if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
-    if key == 65 and (action == 1 or action == 2):  # tecla A
+    # TECLA A - Anda para a esquerda
+    if key == 65 and (action == 1 or action == 2): 
         cameraPos -= glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
+        # Limitacao de cenario ( parede invisivel )
         if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
         if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
-
-    if key == 68 and (action == 1 or action == 2):  # tecla D
+    # TECLA D - Anda para a direita
+    if key == 68 and (action == 1 or action == 2):  
         cameraPos += glm.normalize(glm.cross(cameraFront, cameraUp)) * cameraSpeed
+        # Limitacao de cenario ( parede invisivel )
         if cameraPos.x < -scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.x > scenaryLimit : cameraPos.x = scenaryLimit
         if cameraPos.z < -scenaryLimit : cameraPos.z = scenaryLimit
         if cameraPos.z > scenaryLimit : cameraPos.z = scenaryLimit
 
-    # P - Ativa e desativa GL_LINES
+    # TECLA P - Ativa e desativa Visualizador de Malhas
     if key == 80 and action == 1 and polygonal_mode == True:
         polygonal_mode = False
     else:
         if key == 80 and action == 1 and polygonal_mode == False:
             polygonal_mode = True
 
-    # F - Ativa e desativa modo FLY
+    # TECLA F - Ativa e desativa modo FLY
     if key == 70 and action == 1 and flyMode == True:
         flyMode = False
     else:
         if key == 70 and action == 1 and flyMode == False:
             flyMode = True
 
+    # TECLA UP - Aumenta o FOV
     if key == 265 and (action == 1 or action == 2):  # tecla cima
         FOV += 0.5
         if FOV < 30 : FOV = 30
         if FOV > 120 : FOV = 120
 
+    # TECLA DOWN -  Diminui o FOV
     if key == 264 and (action == 1 or action == 2):  # tecla baixo
         FOV -= 0.5
         if FOV < 30 : FOV = 30
         if FOV > 120 : FOV = 120
 
+    # TECLA SPACE - Voa para cima
     if key == 32 and (action == 1 or action == 2) and flyMode:  # tecla espaco
         cameraPos += cameraSpeed * cameraUp
         if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
         if cameraPos.y > heightMaxLimit : cameraPos.y = heightMaxLimit
 
+    # TECLA LSHIFT - Voa para baixo
     if key == 340 and (action == 1 or action == 2) and flyMode:  # tecla shift direito
         cameraPos -= cameraSpeed * cameraUp 
         if cameraPos.y < heightMinLimit : cameraPos.y = heightMinLimit
@@ -345,6 +360,7 @@ def mouse_event(window, xpos, ypos):
     xoffset *= sensitivity
     yoffset *= sensitivity
 
+    # Movimentacao invertida ( efeito scroll/touchscreen )
     yaw -= xoffset
     pitch -= yoffset
 
