@@ -20,14 +20,16 @@ import random
 scene = Scene()
 
 # Inicializando janela
-window = gh.setWindow(640, 1280, "Trabalho 2 - WASD = Movement, F = FlyMode, LShift = Fly down, Space = Fly up, P = MeshViewMode")
+window = gh.setWindow(640, 1280, "Hold RightMouse - Camera, WASD = Movement, F = Fly, LShift = Fly down, Space = Fly up, P = MeshView, Up Arrow = Increase FOV, Down Arrow = Decrease FOV")
 
+# Configura sharders
 program = gh.setGPU()
 
 glEnable(GL_TEXTURE_2D)
 qtd_texturas = 10
 textures = glGenTextures(qtd_texturas)
 
+# Inclui os modelos na Scene
 scene.appendModel("House", "3dFiles/house/house2.obj", "3dFiles/house/wood.png")
 scene.appendModel("Outlaw", "3dFiles/exterior/outlaw car/outlaw.obj", "3dFiles/exterior/outlaw car/outlaw.png")
 scene.appendModel("OutlawBlue", "3dFiles/exterior/outlaw car/outlaw.obj", "3dFiles/exterior/outlaw car/outlaw_blue.png")
@@ -45,6 +47,7 @@ vertices, textures, normals = scene.getVTN()
 #  Enviando coordenadas de vértices, texturas e dados de iluminacao para a GPU
 gh.setGPUBuffer(program, vertices, textures, normals)
 
+#  Configurando callbacks ( controles para usuario )
 glfw.set_key_callback(window, gh.key_event)
 glfw.set_cursor_pos_callback(window, gh.mouse_event)
 glfw.set_mouse_button_callback(window, gh.mouse_button_callback)
@@ -66,7 +69,8 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glClearColor(0.2, 0.2, 0.2, 1.0)
-
+ 
+    # Visualizador de malha poligonal
     if gh.polygonal_mode == True:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     if gh.polygonal_mode == False:
@@ -83,25 +87,25 @@ while not glfw.window_should_close(window):
     w = 2*3.14*f
     R = 6
 
-    # Exige CARRO1
+    # Exibe CARRO1 (animado)
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( R*math.cos(w*chron), 0.02, R*math.sin(w*chron)-1)
     s = glm.vec3( 0.4, 0.4, 0.4 )
-    model_mat = gh.model( r, t, s, angle = -(90+w*chron*180/3.14) + noise()*0.1)
+    model_mat = gh.model( r, t, s, angle = -(90+w*chron*180/3.14) + noise()*0.5)
     scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.2, kd = 1.0)
 
-    # Exige CARRO2
+    # Exibe CARRO2 (animado)
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( R*math.cos(w*chron-40*3.14/180), 0.02, R*math.sin(w*chron-40*3.14/180))
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = 90-w*chron*180/3.14 + noise()*0.1)
     scene.drawModelbyName(program, "OutlawBlue", model_mat=model_mat, ka = 0.2, kd = 1.0)
 
-    # Exige Police
+    # Exibe Police (animado)
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( R*math.cos(w*chron-30*3.14/180), 0.02, R*math.sin(w*chron-30*3.14/180))
     s = glm.vec3( 0.4, 0.4, 0.4 )
-    model_mat = gh.model( r, t, s, angle = 90-w*chron*180/3.14 + noise()*0)
+    model_mat = gh.model( r, t, s, angle = 90-w*chron*180/3.14 + noise()*0.1)
     scene.drawModelbyName(program, "Police", model_mat=model_mat, ka = 0.2, kd = 1.5)
 
     # Exibe SKYBOX
@@ -153,28 +157,28 @@ while not glfw.window_should_close(window):
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Table", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe o Vanderley
+    # Exibe a Pessoa1 ( Vanderley )
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( 0.5, 0.25, 3.0 )
     s = glm.vec3( 0.1, 0.1, 0.1)
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Man", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe o Vanderley
+    # Exibe a Pessoa2
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( 0.3, 0.25, 0.0 )
     s = glm.vec3( 0.1, 0.1, 0.1)
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Man", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe o Vanderley
+    # Exibe a Pessoa3
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( 0.0, 0.25, 3.0 )
     s = glm.vec3( 0.1, 0.1, 0.1)
     model_mat = gh.model( r, t, s, angle = 90)
     scene.drawModelbyName(program, "Man", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe o Vanderley
+    # Exibe a Pessoa4
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( 0.1, 0.25, 2.8 )
     s = glm.vec3( 0.1, 0.1, 0.1)
