@@ -20,7 +20,7 @@ import random
 scene = Scene()
 
 # Inicializando janela
-window = gh.setWindow(640, 1280, "Trabalho 2")
+window = gh.setWindow(640, 1280, "Trabalho 2 - WASD = Movement, F = FlyMode, LShift = Fly down, Space = Fly up, P = MeshViewMode")
 
 program = gh.setGPU()
 
@@ -30,6 +30,7 @@ textures = glGenTextures(qtd_texturas)
 
 scene.appendModel("House", "3dFiles/house/house2.obj", "3dFiles/house/wood.png")
 scene.appendModel("Outlaw", "3dFiles/exterior/outlaw car/outlaw.obj", "3dFiles/exterior/outlaw car/outlaw.png")
+scene.appendModel("OutlawBlue", "3dFiles/exterior/outlaw car/outlaw.obj", "3dFiles/exterior/outlaw car/outlaw_blue.png")
 scene.appendModel("Police", "3dFiles/exterior/police car/police.obj", "3dFiles/exterior/police car/police.png")
 scene.appendModel("Sky", "3dFiles/sky/sky.obj", "3dFiles/sky/sky2.png")
 scene.appendModel("Grass", "3dFiles/ground/grass/grass.obj", "3dFiles/ground/grass/nova.png")
@@ -62,8 +63,6 @@ while not glfw.window_should_close(window):
     chron = time.time()-chron0
     glfw.poll_events()
 
-    print( gh.cameraPos )
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glClearColor(0.2, 0.2, 0.2, 1.0)
@@ -84,19 +83,19 @@ while not glfw.window_should_close(window):
     w = 2*3.14*f
     R = 6
 
-    # Exige CARRO
+    # Exige CARRO1
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( R*math.cos(w*chron), 0.02, R*math.sin(w*chron)-1)
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = -(90+w*chron*180/3.14) + noise()*0.1)
     scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.2, kd = 1.0)
 
-    # Exige CARRO
+    # Exige CARRO2
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( R*math.cos(w*chron-40*3.14/180), 0.02, R*math.sin(w*chron-40*3.14/180))
     s = glm.vec3( 0.4, 0.4, 0.4 )
     model_mat = gh.model( r, t, s, angle = 90-w*chron*180/3.14 + noise()*0.1)
-    scene.drawModelbyName(program, "Outlaw", model_mat=model_mat, ka = 0.2, kd = 1.0)
+    scene.drawModelbyName(program, "OutlawBlue", model_mat=model_mat, ka = 0.2, kd = 1.0)
 
     # Exige Police
     r = glm.vec3( 0.0, 1.0, 0.0 )
@@ -115,7 +114,7 @@ while not glfw.window_should_close(window):
     # Exibe GRASS
     r = glm.vec3( 1.0, 0.0, 0.0 )
     t = glm.vec3( 0.0, 0.0, 0.0 )
-    s = glm.vec3( 0.5, 0.5, 0.5)
+    s = glm.vec3( 1, 1, 1)
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Grass", model_mat=model_mat, ka = 0.5, kd = 0.7)
 
@@ -126,21 +125,21 @@ while not glfw.window_should_close(window):
     model_mat = gh.model( r, t, s, angle = -90)
     scene.drawModelbyName(program, "Sofa", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe Chair
+    # Exibe Chair1
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( 0.0, 0.0, -0.25 )
     s = glm.vec3( 0.07, 0.07, 0.07)
     model_mat = gh.model( r, t, s, angle = -90)
     scene.drawModelbyName(program, "Chair", model_mat=model_mat, ka = 0.7, kd = 0.7)
     
-    # Exibe Chair
+    # Exibe Chair2
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( 0.1, 0.0, 0.1 )
     s = glm.vec3( 0.07, 0.07, 0.07)
     model_mat = gh.model( r, t, s, angle = 210)
     scene.drawModelbyName(program, "Chair", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe Chair
+    # Exibe Chair3
     r = glm.vec3( 0.0, 1.0, 0.0 )
     t = glm.vec3( -0.2, 0.0, 0.25 )
     s = glm.vec3( 0.07, 0.07, 0.07)
@@ -182,14 +181,12 @@ while not glfw.window_should_close(window):
     model_mat = gh.model( r, t, s, angle = 45)
     scene.drawModelbyName(program, "Man", model_mat=model_mat, ka = 0.7, kd = 0.7)
 
-    # Exibe GRASS
+    # Exibe Concrete
     r = glm.vec3( 1.0, 0.0, 0.0 )
     t = glm.vec3( 0.0, 0.01, 0.0 )
     s = glm.vec3( 0.2, 0.2, 0.2)
     model_mat = gh.model( r, t, s, angle = 0)
     scene.drawModelbyName(program, "Concrete", model_mat=model_mat, ka = 0.5, kd = 0.7)
-
-
 
     mat_view = gh.view()
     loc_view = glGetUniformLocation(program, "view")
@@ -200,7 +197,7 @@ while not glfw.window_should_close(window):
     glUniformMatrix4fv(loc_projection, 1, GL_FALSE, mat_projection)
 
     loc_light_pos = glGetUniformLocation(program, "lightPos")  # recuperando localizacao da variavel lightPos na GPU
-    glUniform3f(loc_light_pos, 10.0*math.cos(chron), 30.0, -10.0*math.sin(chron))  # posicao da fonte de luz
+    glUniform3f(loc_light_pos, 10.0*math.cos(40), 30.0, -10.0*math.sin(40))  # posicao da fonte de luz
 
     glfw.swap_buffers(window)
 
