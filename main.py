@@ -62,8 +62,6 @@ while not glfw.window_should_close(window):
     chron = time.time()-chron0
     glfw.poll_events()
 
-    print( gh.cameraPos )
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glClearColor(0.2, 0.2, 0.2, 1.0)
